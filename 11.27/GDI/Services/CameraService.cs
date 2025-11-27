@@ -93,21 +93,19 @@ namespace GDI.Services
                     Bitmap ColorBitmap = FrameToBitmap(colorFrame);
                     Bitmap DepthColorBitmap = FrameToBitmap(colorizedDepth);
 
-                    //转Bitmap
+                    // 转Bitmap
                     // 直接用bitmap复制不安全，因为此时 bitmap 只是指向了原图的内存地址，需要用 bitmap img = new bitmap(rawimg);复制一份
-                    //Bitmap ColorBitmap = new System.Drawing.Bitmap(colorFrame.Width, colorFrame.Height, colorFrame.Stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, colorFrame.Data);
-                    //Bitmap DepthColorBitmap = new System.Drawing.Bitmap(colorFrame.Width, colorFrame.Height, colorFrame.Stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, colorizedDepth.Data);
                     // 相机/深度图显示到 UI窗口
                     camAction(ColorBitmap, DepthColorBitmap);
 
                 }
             }
-
             if (pipe != null)
             {
                 try { pipe.Stop(); } catch { } // 防止重复 Stop 报错
                 pipe = null; // 清空引用
             }
+
             Console.WriteLine("相机已停止");
         }
 
@@ -122,7 +120,6 @@ namespace GDI.Services
                 return CopyBitmap;
             }
         }
-
 
         public void cam_Thread_start()
         {
