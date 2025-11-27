@@ -325,7 +325,6 @@ namespace GDI.Services
             {
                 MessageBox.Show("[rm_create_robot_arm] connect error:" + robotHandle.id);
             }
-
             return robotHandlePtr;
         }
 
@@ -397,14 +396,9 @@ namespace GDI.Services
 
         // ===================================================================================================
         // ======================================= test =====================================
-        // ===================================================================================================
-
-
-
+        // ==================================================================================================
         //rm_get_controller_state
         public static Action<string> Laser;
-
-
         public static void test1(IntPtr robotHandlePtr)
         {
             float v = 0, c = 0, t = 0;
@@ -462,7 +456,9 @@ namespace GDI.Services
     }
 }
 
-
+/// <summary>
+/// 机械臂结构体参数类
+/// </summary>
 class ThreadArgs
 {
     public IntPtr robotHandlePtr;
