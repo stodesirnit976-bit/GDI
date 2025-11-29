@@ -30,36 +30,18 @@ namespace GDI
 {
     public partial class Form1 : Form
     {
-        string savePath = @"D:\TextImages"; // 完整图片保存文件夹
-        string sliceSavePath = @"D:\TextImages\SliceImages"; // 切割图片存放文件夹
-        string loadPath = @"D:\img"; // 选取图片文件夹
-
-        int sliceHight = 1178;
-
-        // 生成图片的命名数
-        private static int count = 0;
-        private string name;
-
-        private TemplateManager templateManager = new TemplateManager();
-        List<Template> templates;//结构模版的列表
-        private TextRender TextRender = new TextRender();
+        
 
         // ================= 窗口初始化 ==================
         public Form1()
         {
-            count = 0;
+            
             InitializeComponent();
 
-            InitializeClients();
 
             //Control.CheckForIllegalCrossThreadCalls = false; 这行代码强制关闭了多线程冲突
 
-            pictureBox_Preview.SizeMode = PictureBoxSizeMode.Zoom;// 初始化,让PictureBox适应图片大小
-
-            // 双缓冲防闪烁
-            typeof(Panel).InvokeMember("DoubleBuffered",
-                BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
-                null, panel1, new object[] { true });
+            
         }
 
 
@@ -67,13 +49,7 @@ namespace GDI
         // ================= form加载 =================
         private void Form1_Load(object sender, EventArgs e)
         {
-            // 文字的combobox导入
-            templates = templateManager.GetAllTemplates();//把所有模版放入结构模版列表
-            comboBoxTemplate.DataSource = templates.Where(t => t.Name.Contains("模板")).ToList();
-            comboBoxTemplate.DisplayMember = "Name";
-
-            // 图像的combobox导入
-            PictureListLoader.Load(loadPath, comboBox_filePicture);
+            
             // 加载ip地址
             GetIP();
 
@@ -82,10 +58,20 @@ namespace GDI
 
         }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                this.Hide();
+            }
+        }
+
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            StateReader.Stop();
+            
+            //StateReader.Stop();
         }
 
 
@@ -94,206 +80,10 @@ namespace GDI
         // ===================================================================================================
         // ====================================== UI更新/跨线程参数传递 ======================================
         // ===================================================================================================
-        private string _distance = "";
-
-        private void M_update(string str)
-        {
-            // 这里没有通过 while 标志位来实现循环终止，因为 plusss 里是不是无线循环
-            this.BeginInvoke(new Action(() =>
-            {
-                label_test.Text = str;
-            }));
-        }
-        private void D_update(string str)
-        {
-            // 这里没有通过 while 标志位来实现循环终止，因为 plusss 里是不是无线循环
-            this.BeginInvoke(new Action(() =>
-            {
-                label_Distance.Text = str;// 这里str就是距离值
-                _distance = str;
-            }));
-        }
 
 
 
-        // 纯传后台线程参数
-        private void State_Update(string v, string c, string t)
-        {
-            // 这里没有通过 while 标志位来实现循环终止，因为 plusss 里是不是无线循环
-            this.BeginInvoke(new Action(() =>
-            {
-                label_c.Text = c;               
-            }));
-        }
 
-
-        
-
-
-
-        private void test_init()
-        {
-            //LaserSensor laserSensor = new LaserSensor();
-            //laserSensor.M = M_update;
-            //laserSensor.D = D_update;
-            //laserSensor.Start();
-
-            
-        }
-
-
-
-        
-
-
-        // ===================================================================================================
-        // =========================================== 图片生成 ==============================================
-        // ===================================================================================================
-
-        // ================= 生成按键回调 ==================
-        private void button_Generate_Click(object sender, EventArgs e)
-        {
-
-            if (tabControl1.SelectedTab == tabPage1)     // 也可以按 Name 判断
-            {
-                // 清空文件夹
-                Array.ForEach(Directory.GetFiles(sliceSavePath), File.Delete);
-                // 针对第一页的逻辑
-                // 获取填入数据
-                //if (!string.IsNullOrEmpty(textBox_height.Text))
-                var info = new trainInfo
-                {
-                    // 模版1字符串
-                    payLoad = textBox_payLoad.Text,
-                    tareWeight = textBox_tareWeight.Text,
-                    volume = textBox_volume.Text,
-
-                    // 模版2字符串
-                    length = textBox_length.Text,
-                    width = textBox_width.Text,
-                    height = textBox_height.Text,
-                    trans = textBox_trans.Text,
-                };
-
-                // 获取按键是否旋转
-                //bool _Rotate = checkBox_Rotate.Checked;
-                bool _Rotate = radioButton_v.Checked;
-                // 获取选择的模版选项
-                Template tpl = (Template)comboBoxTemplate.SelectedItem;
-
-
-
-                // 生成图片
-                var bmp = TextRender.BmpRender(info, tpl, _Rotate, sliceHight, sliceSavePath);
-
-
-
-                // 显示在UI上预览
-                dispose_pictureBox(pictureBox_Preview);
-                pictureBox_Preview.Image = bmp;
-
-                // 保存到文件夹
-                nameAdd();
-                ImageProcessor.SaveImageToDisk(bmp, name, savePath);
-
-            }
-
-            else if (tabControl1.SelectedTab == tabPage2)
-            {
-                // 清空文件夹
-                Array.ForEach(Directory.GetFiles(sliceSavePath), File.Delete);
-                // 获取模版3：图片模版
-                Template tpl = new TemplateManager()
-                    .GetAllTemplates()
-                    .Find(t => t.Name == "路徽");
-                // 确认是否旋转 true为旋转
-                bool _Rotate = radioButton_v1.Checked;
-
-                string fileName = comboBox_filePicture.SelectedItem.ToString();
-                string fullPath = Path.Combine(loadPath, fileName);
-                if (File.Exists(fullPath))
-                {
-                    try
-                    {
-                        dispose_pictureBox(pictureBox_Preview);
-
-                        using (var stream = new MemoryStream(File.ReadAllBytes(fullPath)))
-                        {
-                            // 从 MemoryStream 创建 Bitmap 对象
-                            Bitmap img = (Bitmap)Image.FromStream(stream);
-
-                            // 得到文件夹提前画好的 1bpp 图片
-                            // 转换成24bpp
-                            img = ImageProcessor.Convert1bppTo24bpp(img);
-                            ImageProcessor.RotateImg(img, _Rotate);
-                            if (_Rotate) ImageProcessor.v_SliceBmp(img, tpl, sliceHight, sliceSavePath);
-                            else ImageProcessor.h_SliceBmp(img, tpl, sliceHight, sliceSavePath);
-                            img = ImageProcessor.Convert24bppTo1bpp(img);
-
-                            pictureBox_Preview.Image = img;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("加载图片失败: " + ex.Message);
-                    }
-                }
-            }
-            
-        }
-
-
-        // ================= 选择图片回调 ==================
-        private void comboBox_filePicture_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabControl1.SelectedTab == tabPage2)
-            {
-                string fileName = comboBox_filePicture.SelectedItem.ToString();
-                string fullPath = Path.Combine(loadPath, fileName);
-
-                if (File.Exists(fullPath))
-                {
-                    try
-                    {
-                        dispose_pictureBox(pictureBox_Preview);
-                        // 使用 MemoryStream 加载图片，避免文件锁定问题
-                        using (var stream = new MemoryStream(File.ReadAllBytes(fullPath)))
-                        {
-                            // 从 MemoryStream 创建 Bitmap 对象
-                            Image img = Image.FromStream(stream);
-
-                            // 将新图片赋值给 PictureBox
-                            pictureBox_Preview.Image = img;
-                            pictureBox_Preview.SizeMode = PictureBoxSizeMode.Zoom; // 设置缩放模式
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("加载图片失败: " + ex.Message);
-                    }
-                }
-            }
-        }
-
-        // 辅助函数：释放图片预览资源
-        private static void dispose_pictureBox(PictureBox box)
-        {
-            if (box.Image != null)
-            {
-                box.Image.Dispose();
-                box.Image = null;
-            }
-        }
-
-        // 辅助函数：文件命名
-        private string nameAdd()
-        {
-            count++;
-            name = count.ToString("D2");
-            return name;
-        }
-
-       
 
 
 
@@ -303,8 +93,39 @@ namespace GDI
         SocketClient client9837;
         SocketClient client8080;
 
-        // ================= 初始化socket ==================
-        private void InitializeClients()
+
+        // ================= 对外接口：给MainForm用 ==================
+
+        // ----------- 开启socket -----------
+        public void socket_Start()
+        {
+            btnConnect.Enabled = false;
+
+            socket_Init();
+            
+            string ip = (string)comboBox_ip.SelectedItem; // 这里等等改成固定ip
+
+            client9837.Connect(ip, 9837); // 连控制口
+            client8080.Connect(ip, 8080); // 连数据口
+
+            Console.WriteLine("已调用form的socket连接");
+        }
+
+        // ----------- 关闭socket -----------
+        public void socket_close()
+        {
+            client8080.Close();
+            Show8080(DateTime.Now.ToString("yy-MM-dd hh:mm:ss ") + "已关闭连接" + "\r\n");
+            client9837.Close();
+            Show9837(DateTime.Now.ToString("yy-MM-dd hh:mm:ss ") + "已关闭连接" + "\r\n");
+            btnConnect.Enabled = true;
+        }
+
+
+        // ================= 对内接口：给MainForm/Form用 ==================
+
+        // ----------- 初始化socket -----------
+        private void socket_Init()
         {
             // --- 设置 9837 (控制口) ---
             client9837 = new SocketClient();
@@ -317,25 +138,21 @@ namespace GDI
             client8080.changeBtn = socketServer_closed;
         }
 
-        // ================== 连接按钮 ==================
+        // ----------- 连接按钮 -----------
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            btnConnect.Enabled = false;
-            string ip = (string)comboBox_ip.SelectedItem;
-
-            client9837.Connect(ip, 9837); // 连控制口
-            client8080.Connect(ip, 8080); // 连数据口
-            //MessageBox.Show(ip);
+            socket_Start();
+            Console.WriteLine("已点击form的socket连接按钮");
         }
 
-        // ================== 指令发送按钮 (发给9837) ==================
+        // ----------- 指令发送按钮 (发给9837) -----------
         private void btn9837Send_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(textInput.Text))
                 client9837.Send(textInput.Text);
         }
 
-        // ================== 数据发送按钮 (发给8080) ==================
+        // ----------- 数据发送按钮 (发给8080) -----------
         private void btn8080Send_Click(object sender, EventArgs e)
         {
             // 获取输入框内容直接发送
@@ -343,8 +160,8 @@ namespace GDI
                 client8080.Send(textInput.Text);
         }
 
-
-         private void Show9837(string msg)
+        // ----------- 委托回调显示9837接收的数据 -----------
+        private void Show9837(string msg)
         {
             this.BeginInvoke(new Action(() =>
             {
@@ -353,6 +170,7 @@ namespace GDI
             }));  
         }
 
+        // ----------- 委托回调显示8080接收的数据 -----------
         private void Show8080(string msg)
         {
             this.BeginInvoke(new Action( ()=>
@@ -362,16 +180,14 @@ namespace GDI
             }));
         }
 
-        // ================= 主动关闭socket ==================
+        // ----------- 主动关闭socket -----------
         private void btnClose_Click(object sender, EventArgs e)
-        {  
-            client8080.Close();
-            Show8080(DateTime.Now.ToString("yy-MM-dd hh:mm:ss ") + "已关闭连接" + "\r\n");
-            client9837.Close();
-            Show9837(DateTime.Now.ToString("yy-MM-dd hh:mm:ss ") + "已关闭连接" + "\r\n");
-            btnConnect.Enabled = true;
+        {
+            socket_close();
+            Console.WriteLine("已点击form的socket关闭按钮");
         }
-        // ================= 服务端关闭socket ==================
+
+        // ----------- 服务端关闭socket -----------
         private void socketServer_closed()
         {
             if (btnConnect.InvokeRequired)
@@ -384,7 +200,7 @@ namespace GDI
             }
         }
 
-        // ================= 清空log ==================
+        // ----------- 清空log -----------
         private void btnClear_Click(object sender, EventArgs e)
         {
             rtb8080Log.Clear();
@@ -421,18 +237,28 @@ namespace GDI
         // ===================================================================================================
         // ======================================= 机械臂初始化设置 ==========================================
         // ===================================================================================================
-  
-        // ================= 连接机械臂 ==================
-        private void btnArmInit_Click(object sender, EventArgs e)
+        string loadPath = @"D:\img"; // 选取图片文件夹
+
+
+        // =============== 对外接口：给MainForm/form用 ===============
+
+        // -------- 机械臂初始化 --------
+        public void arm_Init()
         {
             Task.Run(() =>
             {
                 Arm.armInit();
             });
-
         }
-        // ================= 机械臂急停 ==================
-        private void btnStop_Click(object sender, EventArgs e)
+
+        // -------- 机械臂关闭 --------
+        public void arm_Close()
+        {
+            
+        }
+
+        // -------- 机械臂急停 --------
+        public void arm_EStop()
         {
             Task.Run(() =>
             {
@@ -440,7 +266,22 @@ namespace GDI
             });
         }
 
-        // ================= 机械臂开关喷印系统触发 ==================
+
+        // =============== 对内接口：给form用 ===============
+
+        // -------- 连接机械臂 --------
+        private void btnArmInit_Click(object sender, EventArgs e)
+        {
+            arm_Init();
+        }
+
+        // -------- 机械臂急停 --------
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            arm_EStop();
+        }
+
+        // -------- 机械臂开关喷印系统触发 --------
         private void btn_noPrintf_Click(object sender, EventArgs e)
         {
             bool _switch = radioButton_PrintClose.Checked;
@@ -457,20 +298,23 @@ namespace GDI
                 int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 3, 0);// 设置1号端口输出低电平
                 Console.WriteLine($"2号口设置为输出模式高电平{ret}{b}");
             }
-            
-                // 以上是高电平2v，低电平1v。并且不知道为什么不管设置哪个io口，接的那根线都会输出变化电平
+            // 以上是高电平2v，低电平1v。并且不知道为什么不管设置哪个io口，接的那根线都会输出变化电平
         }
 
+
         // ================= 模版 ==============
+
+        // -------- 机械臂调速滑块 --------
         private void trackBar_speed_Scroll(object sender, EventArgs e)
         {
             label_speed.Text = trackBar_speed.Value.ToString();
         }
 
+        // -------- 机械臂运行 --------
         private async void btn_start_Click(object sender, EventArgs e)
         {
             btn_start.Enabled = false;
-            if (string.IsNullOrEmpty(textBox_UVheight.Text))
+            if (string.IsNullOrEmpty(tbx_Height.Text))
             {
                 MessageBox.Show("请输入高度参数！");
                 return;
@@ -497,10 +341,8 @@ namespace GDI
             // 假设有一个函数 ArmHeight(work_h) 设定作业平面，得把这个函数加入 Arm.test的形参中，
             // 设定作业距离为 5mm ，也就是 _distance = 5,
             // 即 if(_distance =< 5) 
-            // 
             // 机械臂末端离平面高度，单位 m
-            float height = float.Parse(textBox_UVheight.Text) / 100;
-
+            float height = float.Parse(tbx_Height.Text) / 100;
 
             // n走线或z走线
             bool N = radioButton_N.Checked;
@@ -526,15 +368,15 @@ namespace GDI
         }
 
 
-
-
-
         // ================= 高级 ==============
+
+        // -------- 机械臂调速滑块 --------
         private void trackBar_H_speed_Scroll(object sender, EventArgs e)
         {
             label_H_speed.Text = trackBar_H_speed.Value.ToString();
         }
 
+        // -------- 机械臂运行 --------
         private async void btn_H_start_Click(object sender, EventArgs e)
         {
             btn_H_start.Enabled = false;
@@ -571,95 +413,71 @@ namespace GDI
 
 
 
-
-
         // ===================================================================================================
         // ========================================= 激光传感器 ==============================================
         // ===================================================================================================
         LaserSensor laserSensor = new LaserSensor();
-        private void btn_laserStop_Click(object sender, EventArgs e)
+        private string distance = "";
+
+
+        // =============== 对外接口：给MainForm/form用 ===============
+
+        // -------- 启动激光测距传感器 --------
+        public void laser_Start()
         {
+            laserSensor.D = D_update;
             laserSensor.Start();
         }
-        private void btn_laserStart_Click(object sender, EventArgs e)
+        // -------- 停止激光测距传感器 --------
+        public void laser_Stop()
         {
             laserSensor.Stop();
         }
 
 
-        //Arm.test2(Arm.Instance.robotHandlePtr);
+        // =============== 对内接口：给form用 ===============
 
-        // ===================================================================================================
-        // ========================================= 深度相机画面 ============================================
-        // ===================================================================================================
-        CameraService cam = new CameraService();
-        private Bitmap imagecolor;
-        private Bitmap imagedepth;
-        private float alpha = 0.4f;
-
-        // 相机启动
-        private void btn_camSTART_Click(object sender, EventArgs e)
+        // -------- 激光传感器启动按钮 --------
+        private void btn_laserStop_Click(object sender, EventArgs e)
         {
-            cam.camAction = Cam_Update;
-            cam.cam_Thread_start();
+            laser_Start();
         }
-        // 相机关闭
-        private void btn_camSTOP_Click(object sender, EventArgs e)
+        // -------- 激光传感器停止按钮 --------
+        private void btn_laserStart_Click(object sender, EventArgs e)
         {
-            cam.cam_Thread_stop();
+            laser_Stop();
         }
 
-        // 更新相机画面
-        private void Cam_Update(Bitmap color, Bitmap depth)
+        // -------- 激光传感器距离数据更新回调 --------
+        private void D_update(string str)
         {
             this.BeginInvoke(new Action(() =>
             {
-                imagecolor?.Dispose();
-                imagedepth?.Dispose();
-
-                imagecolor = color;
-                imagedepth = depth;
-
-                panel1.Invalidate();
+                label_Distance.Text = str;// 这里str就是距离值
+                distance = str;
             }));
         }
-        
-        //Bitmap tempIMG;//' 全局变量
-        //private void picbox(Bitmap img)
-        //{
-            
-        //        this.BeginInvoke(new Action(() =>
-        //        {
-        //            pictureBox_Preview.Image = img;
-        //            tempIMG = new Bitmap(img);
-        //        }));
-                       
-        //}
 
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+
+
+        // ===================================================================================================
+        // ====================================== 机械比状态数据更新 =========================================
+        // ===================================================================================================
+
+
+        // 纯传后台线程参数
+        private void State_Update(string v, string c, string t)
         {
-            Graphics g = e.Graphics;
-
-            if (imagecolor != null)
-                g.DrawImage(imagecolor, 0, 0, panel1.Width, panel1.Height);
-
-            if (imagedepth != null)
+            // 这里没有通过 while 标志位来实现循环终止，因为 plusss 里是不是无线循环
+            this.BeginInvoke(new Action(() =>
             {
-                ColorMatrix cm = new ColorMatrix();
-                cm.Matrix33 = alpha;
-
-                ImageAttributes ia = new ImageAttributes();
-                ia.SetColorMatrix(cm);
-
-                Rectangle rect = new Rectangle(0, 0, panel1.Width, panel1.Height);
-
-                g.DrawImage(imagedepth, rect, 0, 0, imagedepth.Width, imagedepth.Height,
-                    GraphicsUnit.Pixel, ia);
-            }
+                label_c.Text = c;
+            }));
         }
 
-        
+
+
     }
 
 }
