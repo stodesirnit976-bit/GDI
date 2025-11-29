@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GDI.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace GDI.Core
 {
     public class test
     {
-        public static void Modbus(IntPtr Arm.Instance.robotHandlePtr)
+        public static void Modbus()
         {
             // 修改dllimport
             // public static extern int rm_read_multiple_holding_registers(IntPtr handle, rm_peripheral_read_write_params_t param, int[] data);// 修改这里
@@ -50,7 +51,7 @@ namespace GDI.Core
             }
         }
 
-        public static void test2(IntPtr Arm.Instance.robotHandlePtr)
+        public static void test2()
         {
             // 实例化结构体
             rm_arm_all_state_t armState = new rm_arm_all_state_t();

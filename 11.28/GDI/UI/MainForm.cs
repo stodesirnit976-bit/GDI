@@ -66,9 +66,10 @@ namespace GDI
         // ----------- 窗口关闭事件：关闭服务 ------------
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // 可以加个判断逻辑：如果机械臂没有回到初始位置，提示用户先回初始位置再关闭系统
+            // 可以加个判断逻辑：如果机械臂没有回到初始位置， 
             
-
+            // 以下的关闭需要确认是否有句柄、实例对象的存在，如果没有直接跳过
+            
             // 关闭socket服务
             detailForm.socket_close();
             // 关闭相机服务
@@ -167,7 +168,7 @@ namespace GDI
                 Template tpl = (Template)comboBoxTemplate.SelectedItem;
 
                 // 生成图片
-                var bmp = TextRender.BmpRender(info, tpl, _Rotate, sliceHight, sliceSavePath);
+                Bitmap bmp = TextRender.BmpRender(info, tpl, _Rotate, sliceHight, sliceSavePath);
 
                 // 显示在UI上预览
                 dispose_pictureBox(pictureBox_Preview);
@@ -176,7 +177,6 @@ namespace GDI
                 // 保存到文件夹
                 nameAdd();
                 ImageProcessor.SaveImageToDisk(bmp, name, savePath);
-
             }
 
             else if (tabControl1.SelectedTab == tabPage2)
@@ -187,32 +187,22 @@ namespace GDI
                 Template tpl = new TemplateManager()
                     .GetAllTemplates()
                     .Find(t => t.Name == "路徽");
+
                 // 确认是否旋转 true为旋转
                 bool _Rotate = radioButton_v1.Checked;
 
                 string fileName = comboBox_filePicture.SelectedItem.ToString();
                 string fullPath = Path.Combine(loadPath, fileName);
+
                 if (File.Exists(fullPath))
                 {
                     try
                     {
                         dispose_pictureBox(pictureBox_Preview);
 
-                        using (var stream = new MemoryStream(File.ReadAllBytes(fullPath)))
-                        {
-                            // 从 MemoryStream 创建 Bitmap 对象
-                            Bitmap img = (Bitmap)Image.FromStream(stream);
+                        Bitmap img = TextRender.fileImgRender(fullPath, tpl, _Rotate, sliceHight, sliceSavePath);
 
-                            // 得到文件夹提前画好的 1bpp 图片
-                            // 转换成24bpp
-                            img = ImageProcessor.Convert1bppTo24bpp(img);
-                            ImageProcessor.RotateImg(img, _Rotate);
-                            if (_Rotate) ImageProcessor.v_SliceBmp(img, tpl, sliceHight, sliceSavePath);
-                            else ImageProcessor.h_SliceBmp(img, tpl, sliceHight, sliceSavePath);
-                            img = ImageProcessor.Convert24bppTo1bpp(img);
-
-                            pictureBox_Preview.Image = img;
-                        }
+                        pictureBox_Preview.Image = img;                        
                     }
                     catch (Exception ex)
                     {
@@ -224,7 +214,7 @@ namespace GDI
         }
 
 
-        // -------- 选择图片回调 --------
+        // -------- tab2里选择图片回调 --------
         private void comboBox_filePicture_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab == tabPage2)

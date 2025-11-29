@@ -34,6 +34,7 @@
             this.btnArmInit = new System.Windows.Forms.Button();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tbx_Height = new System.Windows.Forms.TextBox();
             this.radioButton_Z = new System.Windows.Forms.RadioButton();
             this.radioButton_N = new System.Windows.Forms.RadioButton();
             this.btn_start = new System.Windows.Forms.Button();
@@ -77,25 +78,24 @@
             this.label31 = new System.Windows.Forms.Label();
             this.label_test = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.rtb8080Log = new System.Windows.Forms.RichTextBox();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.textInput = new System.Windows.Forms.TextBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.rtb9837Log = new System.Windows.Forms.RichTextBox();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.btn9837Send = new System.Windows.Forms.Button();
-            this.btn8080Send = new System.Windows.Forms.Button();
-            this.btnConnect = new System.Windows.Forms.Button();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.comboBox_ip = new System.Windows.Forms.ComboBox();
-            this.label22 = new System.Windows.Forms.Label();
             this.radioButton_PrintClose = new System.Windows.Forms.RadioButton();
             this.radioButton_PrintOpen = new System.Windows.Forms.RadioButton();
-            this.tbx_Height = new System.Windows.Forms.TextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.comboBox_ip = new System.Windows.Forms.ComboBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.btnConnect = new System.Windows.Forms.Button();
+            this.btn8080Send = new System.Windows.Forms.Button();
+            this.btn9837Send = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.rtb9837Log = new System.Windows.Forms.RichTextBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.textInput = new System.Windows.Forms.TextBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.rtb8080Log = new System.Windows.Forms.RichTextBox();
             this.groupBox2.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -104,29 +104,31 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H_speed)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.radioButton_PrintOpen);
             this.groupBox2.Controls.Add(this.btn_noPrintf);
+            this.groupBox2.Controls.Add(this.radioButton_PrintClose);
             this.groupBox2.Controls.Add(this.btnStop);
             this.groupBox2.Controls.Add(this.btnArmInit);
             this.groupBox2.Controls.Add(this.tabControl2);
-            this.groupBox2.Location = new System.Drawing.Point(659, 645);
+            this.groupBox2.Location = new System.Drawing.Point(659, 568);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(588, 545);
+            this.groupBox2.Size = new System.Drawing.Size(588, 568);
             this.groupBox2.TabIndex = 35;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "操作初始化设置/调试";
             // 
             // btn_noPrintf
             // 
-            this.btn_noPrintf.Location = new System.Drawing.Point(421, 24);
+            this.btn_noPrintf.Location = new System.Drawing.Point(421, 49);
             this.btn_noPrintf.Margin = new System.Windows.Forms.Padding(4);
             this.btn_noPrintf.Name = "btn_noPrintf";
             this.btn_noPrintf.Size = new System.Drawing.Size(151, 60);
@@ -137,7 +139,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(225, 25);
+            this.btnStop.Location = new System.Drawing.Point(227, 49);
             this.btnStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(151, 60);
@@ -148,7 +150,7 @@
             // 
             // btnArmInit
             // 
-            this.btnArmInit.Location = new System.Drawing.Point(19, 24);
+            this.btnArmInit.Location = new System.Drawing.Point(23, 48);
             this.btnArmInit.Margin = new System.Windows.Forms.Padding(4);
             this.btnArmInit.Name = "btnArmInit";
             this.btnArmInit.Size = new System.Drawing.Size(159, 61);
@@ -161,7 +163,7 @@
             // 
             this.tabControl2.Controls.Add(this.tabPage3);
             this.tabControl2.Controls.Add(this.tabPage4);
-            this.tabControl2.Location = new System.Drawing.Point(19, 92);
+            this.tabControl2.Location = new System.Drawing.Point(19, 117);
             this.tabControl2.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
@@ -186,6 +188,13 @@
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "模版";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tbx_Height
+            // 
+            this.tbx_Height.Location = new System.Drawing.Point(74, 189);
+            this.tbx_Height.Name = "tbx_Height";
+            this.tbx_Height.Size = new System.Drawing.Size(140, 25);
+            this.tbx_Height.TabIndex = 17;
             // 
             // radioButton_Z
             // 
@@ -473,7 +482,7 @@
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(588, 568);
+            this.groupBox3.Size = new System.Drawing.Size(588, 511);
             this.groupBox3.TabIndex = 35;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "机械臂";
@@ -487,7 +496,6 @@
             this.btn_camSTOP.TabIndex = 5;
             this.btn_camSTOP.Text = "测试关闭";
             this.btn_camSTOP.UseVisualStyleBackColor = true;
- 
             // 
             // btn_camSTART
             // 
@@ -661,6 +669,30 @@
             this.label30.TabIndex = 0;
             this.label30.Text = "mm";
             // 
+            // radioButton_PrintClose
+            // 
+            this.radioButton_PrintClose.AutoSize = true;
+            this.radioButton_PrintClose.Location = new System.Drawing.Point(510, 22);
+            this.radioButton_PrintClose.Margin = new System.Windows.Forms.Padding(4);
+            this.radioButton_PrintClose.Name = "radioButton_PrintClose";
+            this.radioButton_PrintClose.Size = new System.Drawing.Size(58, 19);
+            this.radioButton_PrintClose.TabIndex = 15;
+            this.radioButton_PrintClose.Text = "关闭";
+            this.radioButton_PrintClose.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_PrintOpen
+            // 
+            this.radioButton_PrintOpen.AutoSize = true;
+            this.radioButton_PrintOpen.Checked = true;
+            this.radioButton_PrintOpen.Location = new System.Drawing.Point(431, 22);
+            this.radioButton_PrintOpen.Margin = new System.Windows.Forms.Padding(4);
+            this.radioButton_PrintOpen.Name = "radioButton_PrintOpen";
+            this.radioButton_PrintOpen.Size = new System.Drawing.Size(58, 19);
+            this.radioButton_PrintOpen.TabIndex = 16;
+            this.radioButton_PrintOpen.TabStop = true;
+            this.radioButton_PrintOpen.Text = "开启";
+            this.radioButton_PrintOpen.UseVisualStyleBackColor = true;
+            // 
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.groupBox7);
@@ -680,53 +712,110 @@
             this.groupBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox5.Size = new System.Drawing.Size(448, 1154);
+            this.groupBox5.Size = new System.Drawing.Size(448, 1122);
             this.groupBox5.TabIndex = 35;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Socket";
             // 
-            // groupBox7
+            // label22
             // 
-            this.groupBox7.Controls.Add(this.rtb8080Log);
-            this.groupBox7.Location = new System.Drawing.Point(8, 68);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(4);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox7.Size = new System.Drawing.Size(435, 346);
-            this.groupBox7.TabIndex = 2;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "8080数据端口日志";
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label22.Location = new System.Drawing.Point(36, 24);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(29, 20);
+            this.label22.TabIndex = 6;
+            this.label22.Text = "IP";
             // 
-            // rtb8080Log
+            // comboBox_ip
             // 
-            this.rtb8080Log.Location = new System.Drawing.Point(13, 32);
-            this.rtb8080Log.Margin = new System.Windows.Forms.Padding(4);
-            this.rtb8080Log.Name = "rtb8080Log";
-            this.rtb8080Log.ReadOnly = true;
-            this.rtb8080Log.Size = new System.Drawing.Size(412, 305);
-            this.rtb8080Log.TabIndex = 2;
-            this.rtb8080Log.Text = "";
+            this.comboBox_ip.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_ip.FormattingEnabled = true;
+            this.comboBox_ip.Location = new System.Drawing.Point(72, 21);
+            this.comboBox_ip.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.comboBox_ip.Name = "comboBox_ip";
+            this.comboBox_ip.Size = new System.Drawing.Size(200, 26);
+            this.comboBox_ip.TabIndex = 4;
             // 
-            // groupBox8
+            // label27
             // 
-            this.groupBox8.Controls.Add(this.textInput);
-            this.groupBox8.Location = new System.Drawing.Point(8, 792);
-            this.groupBox8.Margin = new System.Windows.Forms.Padding(4);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox8.Size = new System.Drawing.Size(432, 148);
-            this.groupBox8.TabIndex = 2;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "发送窗口";
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label27.Location = new System.Drawing.Point(279, 24);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(49, 20);
+            this.label27.TabIndex = 6;
+            this.label27.Text = "端口";
             // 
-            // textInput
+            // comboBox2
             // 
-            this.textInput.Location = new System.Drawing.Point(11, 29);
-            this.textInput.Margin = new System.Windows.Forms.Padding(4);
-            this.textInput.Multiline = true;
-            this.textInput.Name = "textInput";
-            this.textInput.Size = new System.Drawing.Size(420, 93);
-            this.textInput.TabIndex = 1;
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(336, 21);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(97, 26);
+            this.comboBox2.TabIndex = 4;
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.Font = new System.Drawing.Font("宋体", 11F);
+            this.btnConnect.Location = new System.Drawing.Point(3, 1032);
+            this.btnConnect.Margin = new System.Windows.Forms.Padding(4);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(139, 40);
+            this.btnConnect.TabIndex = 0;
+            this.btnConnect.Text = "连接UV喷印";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
+            // btn8080Send
+            // 
+            this.btn8080Send.Font = new System.Drawing.Font("宋体", 11F);
+            this.btn8080Send.Location = new System.Drawing.Point(153, 1032);
+            this.btn8080Send.Margin = new System.Windows.Forms.Padding(4);
+            this.btn8080Send.Name = "btn8080Send";
+            this.btn8080Send.Size = new System.Drawing.Size(139, 40);
+            this.btn8080Send.TabIndex = 0;
+            this.btn8080Send.Text = "数据发送";
+            this.btn8080Send.UseVisualStyleBackColor = true;
+            this.btn8080Send.Click += new System.EventHandler(this.btn8080Send_Click);
+            // 
+            // btn9837Send
+            // 
+            this.btn9837Send.Font = new System.Drawing.Font("宋体", 11F);
+            this.btn9837Send.Location = new System.Drawing.Point(299, 1032);
+            this.btn9837Send.Margin = new System.Windows.Forms.Padding(4);
+            this.btn9837Send.Name = "btn9837Send";
+            this.btn9837Send.Size = new System.Drawing.Size(139, 40);
+            this.btn9837Send.TabIndex = 0;
+            this.btn9837Send.Text = "指令发送";
+            this.btn9837Send.UseVisualStyleBackColor = true;
+            this.btn9837Send.Click += new System.EventHandler(this.btn9837Send_Click);
+            // 
+            // btnClose
+            // 
+            this.btnClose.Font = new System.Drawing.Font("宋体", 11F);
+            this.btnClose.Location = new System.Drawing.Point(294, 958);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(4);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(139, 40);
+            this.btnClose.TabIndex = 0;
+            this.btnClose.Text = "关闭";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Font = new System.Drawing.Font("宋体", 11F);
+            this.btnClear.Location = new System.Drawing.Point(19, 958);
+            this.btnClear.Margin = new System.Windows.Forms.Padding(4);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(139, 40);
+            this.btnClear.TabIndex = 0;
+            this.btnClear.Text = "清空";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // groupBox6
             // 
@@ -750,145 +839,56 @@
             this.rtb9837Log.TabIndex = 2;
             this.rtb9837Log.Text = "";
             // 
-            // btnClear
+            // groupBox8
             // 
-            this.btnClear.Font = new System.Drawing.Font("宋体", 11F);
-            this.btnClear.Location = new System.Drawing.Point(21, 1008);
-            this.btnClear.Margin = new System.Windows.Forms.Padding(4);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(139, 40);
-            this.btnClear.TabIndex = 0;
-            this.btnClear.Text = "清空";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.groupBox8.Controls.Add(this.textInput);
+            this.groupBox8.Location = new System.Drawing.Point(8, 792);
+            this.groupBox8.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox8.Size = new System.Drawing.Size(432, 148);
+            this.groupBox8.TabIndex = 2;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "发送窗口";
             // 
-            // btnClose
+            // textInput
             // 
-            this.btnClose.Font = new System.Drawing.Font("宋体", 11F);
-            this.btnClose.Location = new System.Drawing.Point(296, 1008);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(4);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(139, 40);
-            this.btnClose.TabIndex = 0;
-            this.btnClose.Text = "关闭";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.textInput.Location = new System.Drawing.Point(11, 29);
+            this.textInput.Margin = new System.Windows.Forms.Padding(4);
+            this.textInput.Multiline = true;
+            this.textInput.Name = "textInput";
+            this.textInput.Size = new System.Drawing.Size(420, 93);
+            this.textInput.TabIndex = 1;
             // 
-            // btn9837Send
+            // groupBox7
             // 
-            this.btn9837Send.Font = new System.Drawing.Font("宋体", 11F);
-            this.btn9837Send.Location = new System.Drawing.Point(301, 1082);
-            this.btn9837Send.Margin = new System.Windows.Forms.Padding(4);
-            this.btn9837Send.Name = "btn9837Send";
-            this.btn9837Send.Size = new System.Drawing.Size(139, 40);
-            this.btn9837Send.TabIndex = 0;
-            this.btn9837Send.Text = "指令发送";
-            this.btn9837Send.UseVisualStyleBackColor = true;
-            this.btn9837Send.Click += new System.EventHandler(this.btn9837Send_Click);
+            this.groupBox7.Controls.Add(this.rtb8080Log);
+            this.groupBox7.Location = new System.Drawing.Point(8, 68);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox7.Size = new System.Drawing.Size(435, 346);
+            this.groupBox7.TabIndex = 2;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "8080数据端口日志";
             // 
-            // btn8080Send
+            // rtb8080Log
             // 
-            this.btn8080Send.Font = new System.Drawing.Font("宋体", 11F);
-            this.btn8080Send.Location = new System.Drawing.Point(155, 1082);
-            this.btn8080Send.Margin = new System.Windows.Forms.Padding(4);
-            this.btn8080Send.Name = "btn8080Send";
-            this.btn8080Send.Size = new System.Drawing.Size(139, 40);
-            this.btn8080Send.TabIndex = 0;
-            this.btn8080Send.Text = "数据发送";
-            this.btn8080Send.UseVisualStyleBackColor = true;
-            this.btn8080Send.Click += new System.EventHandler(this.btn8080Send_Click);
-            // 
-            // btnConnect
-            // 
-            this.btnConnect.Font = new System.Drawing.Font("宋体", 11F);
-            this.btnConnect.Location = new System.Drawing.Point(5, 1082);
-            this.btnConnect.Margin = new System.Windows.Forms.Padding(4);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(139, 40);
-            this.btnConnect.TabIndex = 0;
-            this.btnConnect.Text = "连接UV喷印";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(336, 21);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(97, 26);
-            this.comboBox2.TabIndex = 4;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label27.Location = new System.Drawing.Point(279, 24);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(49, 20);
-            this.label27.TabIndex = 6;
-            this.label27.Text = "端口";
-            // 
-            // comboBox_ip
-            // 
-            this.comboBox_ip.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_ip.FormattingEnabled = true;
-            this.comboBox_ip.Location = new System.Drawing.Point(72, 21);
-            this.comboBox_ip.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.comboBox_ip.Name = "comboBox_ip";
-            this.comboBox_ip.Size = new System.Drawing.Size(200, 26);
-            this.comboBox_ip.TabIndex = 4;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label22.Location = new System.Drawing.Point(36, 24);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(29, 20);
-            this.label22.TabIndex = 6;
-            this.label22.Text = "IP";
-            // 
-            // radioButton_PrintClose
-            // 
-            this.radioButton_PrintClose.AutoSize = true;
-            this.radioButton_PrintClose.Location = new System.Drawing.Point(1169, 620);
-            this.radioButton_PrintClose.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButton_PrintClose.Name = "radioButton_PrintClose";
-            this.radioButton_PrintClose.Size = new System.Drawing.Size(58, 19);
-            this.radioButton_PrintClose.TabIndex = 15;
-            this.radioButton_PrintClose.Text = "关闭";
-            this.radioButton_PrintClose.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_PrintOpen
-            // 
-            this.radioButton_PrintOpen.AutoSize = true;
-            this.radioButton_PrintOpen.Checked = true;
-            this.radioButton_PrintOpen.Location = new System.Drawing.Point(1090, 620);
-            this.radioButton_PrintOpen.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButton_PrintOpen.Name = "radioButton_PrintOpen";
-            this.radioButton_PrintOpen.Size = new System.Drawing.Size(58, 19);
-            this.radioButton_PrintOpen.TabIndex = 16;
-            this.radioButton_PrintOpen.TabStop = true;
-            this.radioButton_PrintOpen.Text = "开启";
-            this.radioButton_PrintOpen.UseVisualStyleBackColor = true;
-            // 
-            // tbx_Height
-            // 
-            this.tbx_Height.Location = new System.Drawing.Point(74, 189);
-            this.tbx_Height.Name = "tbx_Height";
-            this.tbx_Height.Size = new System.Drawing.Size(140, 25);
-            this.tbx_Height.TabIndex = 17;
+            this.rtb8080Log.Location = new System.Drawing.Point(13, 32);
+            this.rtb8080Log.Margin = new System.Windows.Forms.Padding(4);
+            this.rtb8080Log.Name = "rtb8080Log";
+            this.rtb8080Log.ReadOnly = true;
+            this.rtb8080Log.Size = new System.Drawing.Size(412, 305);
+            this.rtb8080Log.TabIndex = 2;
+            this.rtb8080Log.Text = "";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(1339, 1210);
-            this.Controls.Add(this.radioButton_PrintOpen);
-            this.Controls.Add(this.radioButton_PrintClose);
+            this.ClientSize = new System.Drawing.Size(1294, 1152);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -896,11 +896,11 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -912,19 +912,17 @@
             this.groupBox3.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
@@ -951,23 +949,8 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Button btnConnect;
-        private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.GroupBox groupBox8;
-        private System.Windows.Forms.TextBox textInput;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button btn8080Send;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.ComboBox comboBox_ip;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Button btn9837Send;
-        private System.Windows.Forms.RichTextBox rtb8080Log;
-        private System.Windows.Forms.RichTextBox rtb9837Log;
-        private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnArmInit;
         private System.Windows.Forms.Button btnStop;
-        private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Label label_test;
         private System.Windows.Forms.Label label30;
@@ -990,6 +973,22 @@
         private System.Windows.Forms.Button btn_camSTOP;
         private System.Windows.Forms.Button btn_laserStop;
         private System.Windows.Forms.TextBox tbx_Height;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.RichTextBox rtb8080Log;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.TextBox textInput;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.RichTextBox rtb9837Log;
+        private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btn9837Send;
+        private System.Windows.Forms.Button btn8080Send;
+        private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.ComboBox comboBox_ip;
+        private System.Windows.Forms.Label label22;
     }
 }
 

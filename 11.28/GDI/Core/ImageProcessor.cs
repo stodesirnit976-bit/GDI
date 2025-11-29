@@ -64,14 +64,12 @@ namespace GDI.Core
             System.Runtime.InteropServices.Marshal.Copy(dstBuffer, 0, dstData.Scan0, dstBuffer.Length);
             bmp.UnlockBits(dstData);
             source.UnlockBits(srcData);
+
             return bmp;
         }
 
-        /// <summary>
+
         /// 转换图片，传入 1Bpp 图片返回 24Bpp 图片
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
         public static Bitmap Convert1bppTo24bpp(Bitmap src)
         {
             if (src.PixelFormat != PixelFormat.Format1bppIndexed)
@@ -84,9 +82,6 @@ namespace GDI.Core
 
         /// <summary>
         /// 旋转图片，内部会转换成32bpp，所以旋转对象最好为24bpp
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <param name="rotate"></param>
         public static void RotateImg(Bitmap bmp, bool rotate)
         {
             if (rotate)
@@ -94,13 +89,7 @@ namespace GDI.Core
         }
 
 
-        /// <summary>
-        /// 横切24Bpp图片并保存为1Bpp
-        /// </summary>
-        /// <param name="rawbitmap">24Bpp图</param>
-        /// <param name="tpl">图片模版</param>
-        /// <param name="sliceHight">横切的切割高度</param>
-        /// <param name="path">保存路径</param>
+        /// 横图切24Bpp图片并保存为1Bpp，原图未做额外处理
         public static void h_SliceBmp(Bitmap rawbitmap, Template tpl, int sliceHight, string path)
         {
             // 每张新图切割从01开始
@@ -119,24 +108,22 @@ namespace GDI.Core
                 {
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
+                        g.Clear(Color.White);
+
                         g.DrawImage(rawbitmap, new Rectangle(0, 0, tpl.Width, realHight), new Rectangle(0, y, tpl.Width, realHight), GraphicsUnit.Pixel);
                         // 转换成1Bpp
                         Bitmap slicebmp = Convert24bppTo1bpp(bmp);
 
                         count++;
                         name = count.ToString("D2");
+
                         SaveImageToDisk(slicebmp, name, path);
+                        slicebmp.Dispose();
                     }
                 }
             }
         }
-        /// <summary>
-        /// 竖切24Bpp图片并保存为1Bpp
-        /// </summary>
-        /// <param name="rawbitmap">24Bpp图</param>
-        /// <param name="tpl">图片模版</param>
-        /// <param name="sliceHight">横切的切割高度</param>
-        /// <param name="path">保存路径</param>
+        /// 竖图切24Bpp图片并保存为1Bpp，原图未做额外处理
         public static void v_SliceBmp(Bitmap rawbitmap, Template tpl, int sliceHight, string path)
         {
             // 每张新图切割从01开始
@@ -155,6 +142,8 @@ namespace GDI.Core
                 {
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
+                        g.Clear(Color.White);
+
                         g.DrawImage(rawbitmap, new Rectangle(0, 0, tpl.Height, realHight), new Rectangle(0, y, tpl.Height, realHight), GraphicsUnit.Pixel);
                        
                         // 转换成1Bpp
@@ -162,7 +151,9 @@ namespace GDI.Core
 
                         count++;
                         name = count.ToString("D2");
+
                         SaveImageToDisk(slicebmp, name, path);
+                        slicebmp.Dispose();
                     }
                 }
             }
@@ -195,7 +186,7 @@ namespace GDI.Core
             bmp.Save(fullPath, ImageFormat.Bmp);
 
             if(!dirPath.Contains("SliceImages"))
-            MessageBox.Show($"图片已生成:\n{fullPath}");
+                MessageBox.Show($"图片已生成:\n{fullPath}");
         }
      
     }

@@ -13,6 +13,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ScrollBar;
+using System.Drawing.Drawing2D;
 
 namespace GDI.Core
 {
@@ -146,6 +147,9 @@ namespace GDI.Core
         {
             return c == '³' || c == '×';
         }
+
+
+
 
   
 
@@ -315,170 +319,113 @@ namespace GDI.Core
         }
 
 
+        // ----------- 完整图片加虚线 ------------
+        private Bitmap previewImg(Bitmap bmp, bool rotate, Template tpl, int sliceHight)
+        {
+            Bitmap tembmp = new Bitmap(bmp);
+            using (Graphics g = Graphics.FromImage(tembmp))
+            {
+                using (Pen pen = new Pen(Color.Brown, 40))
+                {
+                    pen.DashStyle = DashStyle.Dash;
+
+                    if (rotate)// 横切
+                    {
+                        int cnt = (tpl.Width + sliceHight - 1) / sliceHight;
+                        for (int i = 1; i < cnt; i++)
+                        {
+                            int x = sliceHight * i;
+                            g.DrawLine(pen, x, 0, x, tpl.Height);
+                        }
+                    }
+                    else// 竖切
+                    {
+                        int cnt = (tpl.Height + sliceHight - 1) / sliceHight;
+                        for (int i = 1; i < cnt; i++)
+                        {
+                            int y = sliceHight * i;
+                            // 对于横切，两点y坐标一致，x1=0 x2=tpl.w
+                            g.DrawLine(pen, 0, y, tpl.Width, y);
+                        }
+                    }
+                }
+            }
+            int previewHeight = 500;
+            int previewWidth = (int)((float)tembmp.Width / tembmp.Height * previewHeight);
+            Bitmap smallImage = new Bitmap(tembmp, previewWidth, previewHeight);
+            tembmp.Dispose();
+            return smallImage;
+        }
+        
+
+
+
 
         // ====================================================================
         // ========================  对外公开接口 =============================
         // ====================================================================
-        /// <summary>
+
         /// 清空文件夹并按序生成图片，切割图片并保存，返回的是1bpp完整图像
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="tpl"></param>
-        /// <param name="rotate"></param>
-        /// <param name="sliceHight"></param>
-        /// <param name="sliceSavePath"></param>
-        /// <returns></returns>
         public Bitmap BmpRender(trainInfo info, Template tpl, bool rotate, int sliceHight, string sliceSavePath)
         {
             // 放到按键回调里了
-            //Array.ForEach(Directory.GetFiles(sliceSavePath), File.Delete);
-            
-            Bitmap bmp;
-
+            // Array.ForEach(Directory.GetFiles(sliceSavePath), File.Delete);
+          
             // 生成图片_24bpp
-            bmp = drawTemplate(info, tpl);
-            // 旋转图片_24bpp
+            Bitmap bmp = drawTemplate(info, tpl);
+
+            // 画线函数不改变传入的bmp，返回一个画好的新图用于previewbox
+            Bitmap previewImage = previewImg(bmp, rotate, tpl, sliceHight);
+           
+            // 旋转图片_24bpp-- 需要考虑到底是转多少度？
             ImageProcessor.RotateImg(bmp, rotate);
-            // 切割图片_24bppTo1bpp保存
+
+                // 切割图片_24bppTo1bpp保存
             if (rotate)     ImageProcessor.v_SliceBmp(bmp, tpl, sliceHight, sliceSavePath);
             else            ImageProcessor.h_SliceBmp(bmp, tpl, sliceHight, sliceSavePath);
-            // 对原图转换成1bpp
-            var newBmp = ImageProcessor.Convert24bppTo1bpp(bmp);
 
-            return newBmp;
+            // 对原图转换成1bpp
+            //var newBmp = ImageProcessor.Convert24bppTo1bpp(smallImage);
+
+            bmp.Dispose();
+            return previewImage;
         }
+
+        // ----------- 现有图片的处理生成 -----------内存有五百多mb，要找找哪儿的问题
+        public Bitmap fileImgRender(string fullpath, Template tpl, bool rotate, int sliceHight, string sliceSavePath)
+        {
+            using (var stream = new MemoryStream(File.ReadAllBytes(fullpath)))
+            {
+                // 从 MemoryStream 创建 Bitmap 对象
+                Bitmap img = (Bitmap)Image.FromStream(stream);
+
+                // 得到文件夹提前画好的 1bpp 图片，转换成24bpp
+                img = ImageProcessor.Convert1bppTo24bpp(img);
+
+                // 画线函数不改变传入的bmp，返回一个画好的新图用于previewbox
+                Bitmap previewImage = previewImg(img, rotate, tpl, sliceHight);
+
+                ImageProcessor.RotateImg(img, rotate);
+                if (rotate)
+                    ImageProcessor.v_SliceBmp(img, tpl, sliceHight, sliceSavePath);
+                else
+                    ImageProcessor.h_SliceBmp(img, tpl, sliceHight, sliceSavePath);
+
+                img = ImageProcessor.Convert24bppTo1bpp(img);
+
+                return previewImage;
+            }
+        }
+
+        
+
+
+
+
 
     }
 }
 
 
 
-/*
- * 
- *         public Bitmap BmpRender1(string[] lines, Template tpl, bool rotate, int sliceHight, string sliceSavePath)
-        {
-            float currentX = 0;
-            float currentY = 0;
-
-
-            // 1. 创建画布(Bitmap)
-            Bitmap RawBmp = new Bitmap(tpl.Width, tpl.Height, PixelFormat.Format24bppRgb);
-            try
-            {
-                // 2. 创建画笔并绘制(Graphics)
-                using (Graphics g = Graphics.FromImage(RawBmp))
-                {
-                    // 设置绘图质量，抗锯齿
-                    g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                    // 去除前端自动留白，定格0,0
-                    StringFormat sf = StringFormat.GenericTypographic;
-                    // 确保末尾空格也被计算宽度
-                    sf.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
-                    // 填充背景色 (白色背景)
-                    g.Clear(Color.White);
-                    // 定义画笔颜色 (黑色文字)
-                    Brush brush = Brushes.Black;
-
-                    // ========== 逐行绘制 ==========
-                    foreach (string line in lines)
-                    {
-                        if (string.IsNullOrEmpty(line))
-                        {
-                            currentY += (tpl.BigFont + tpl.LineSpacing);
-                            continue;
-                        }
-                        // 调用 ParseText 解析当前一行的字体大小片段
-                        List<TextChunk> chunks = ParseText(line, tpl.BigFont, tpl.SmallFont);
-                        // 为了保证对齐，需要实现的是文字底边对齐而不是字框底边对齐，算出"大字"的基线位置作为标准,
-                        FontFamily f = new FontFamily("宋体");
-                        float bigAscent = tpl.BigFont * f.GetCellAscent(FontStyle.Regular) / (float)f.GetEmHeight(FontStyle.Regular);
-
-                        // 绘制当前一行的字符串
-                        foreach (var chunk in chunks)
-                        {
-                            using (Font font = new Font("宋体", chunk.FontSize, GraphicsUnit.Pixel))
-                            {
-                                // 算出当前这个字号基线到顶部的距离
-                                float ascent = chunk.FontSize * f.GetCellAscent(FontStyle.Regular) / (float)f.GetEmHeight(FontStyle.Regular);
-                                // 行底部对齐：当前Y = 起始Y + （行高-当前字高）
-                                float yBaseline = currentY + (bigAscent - ascent);
-                                // 绘制
-                                g.DrawString(chunk.Text, font, brush, currentX, yBaseline, sf);
-                                // 移动x位置
-                                SizeF size = g.MeasureString(chunk.Text, font, PointF.Empty, sf);
-                                currentX += (size.Width + tpl.CharSpacing);
-                            }
-                        }
-                        currentX = 0;//新一行从头开始
-                        currentY += (tpl.BigFont + tpl.LineSpacing);
-                    }
-
-                }
-                // 切割图片
-                ImageProcessor.h_SliceBmp(RawBmp, tpl, sliceHight, sliceSavePath);
-                // 旋转图片
-                ImageProcessor.RotateImg(RawBmp, rotate);
-                // 转换为1bpp图片
-                Bitmap bmp = ImageProcessor.Convert24bppTo1bpp(RawBmp); 
-
-                RawBmp.Dispose();
-                return bmp;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("生成失败: " + ex.Message);
-                return null;
-            }
-        }
-
-
-// 使用不稳定unsafe指针的位图转换
-        /*
-        private unsafe Bitmap ConvertTO1Bpp(Bitmap source)
-        {
-            int w = source.Width;
-            int h = source.Height;
-            //创建承接的1bit位图
-            Bitmap bmp = new Bitmap(w, h, PixelFormat.Format1bppIndexed);
-
-            BitmapData dstData = bmp.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
-            BitmapData srcData = source.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
-
-            unsafe
-            {
-                byte* srcPtr = (byte*)srcData.Scan0;
-                byte* dstPtr = (byte*)dstData.Scan0;
-                int srcStride = srcData.Stride;
-                int dstStride = dstData.Stride;
-
-                for (int y = 0; y < h; y++)
-                {
-                    byte* srcRow = srcPtr + y * srcStride;
-                    byte* dstRow = dstPtr + y * dstStride;
-                    
-                    for (int x = 0; x < w; x++)
-                    {
-                        // 原图是24bit RGB
-                        byte b = srcRow[x * 3 + 0];
-                        byte g = srcRow[x * 3 + 1];
-                        byte r = srcRow[x * 3 + 2];
-
-                        // 灰度值
-                        byte gray = (byte)((r + g + b) / 3);
-
-                        // 白色是1，黑色是0
-                        bool isWhite = gray > 128;
-
-                        if (isWhite)
-                            dstRow[x / 8] |= (byte)(0x80 >> (x % 8));
-                        // 黑色默认是0，不需要操作
-                    }
-                    //System.Runtime.InteropServices.Marshal.Copy(scan, 0, Outdata.Scan0+y * Outdata.Stride, scan.Length);
-                }
-            }
-            bmp.UnlockBits(dstData);
-            source.UnlockBits(srcData);
-            return bmp;
-        }
-        */
 
