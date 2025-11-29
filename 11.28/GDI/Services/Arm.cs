@@ -146,7 +146,18 @@ namespace GDI.Services
             }
         }
 
-       
+        public enum rm_pos_teach_type_e
+        {
+            RM_X_DIR_E,        // 位置示教，x轴方向  
+            RM_Y_DIR_E,        // 位置示教，y轴方向  
+            RM_Z_DIR_E         // 位置示教，z轴方向  
+        }
+
+
+
+
+
+
         // 引入 DllImport 特性，并指定 DLL 名称 api_c.dll，
         [DllImport("api_c.dll", EntryPoint = "rm_init", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern int rm_init(rm_thread_mode_e mode);
@@ -269,23 +280,26 @@ namespace GDI.Services
         
         
         // 机械臂结构体
-        public rm_pose_t c_ini;
+        //public rm_pose_t c_ini;
         public rm_peripheral_read_write_params_t paramsConfig;
         public rm_current_arm_state_t armState;
 
-        public double distance;
-        private readonly object distanceLock = new object(); 
-        public double Distance
-        {
-            get
-            {
-                lock (distanceLock) { return distance; }
-            }
-            set
-            {
-                lock (distanceLock) { distance = value; }
-            }
-        }
+        // 上锁变量
+        //public double distance;
+        //private readonly object distanceLock = new object(); 
+        //public double Distance
+        //{
+        //    get
+        //    {
+        //        lock (distanceLock) { return distance; }
+        //    }
+        //    set
+        //    {
+        //        lock (distanceLock) { distance = value; }
+        //    }
+        //}
+
+        private static float[] c_ini = { 0, 94, -129.5f, 0, -62.4f, 0 };
 
         // ==========================================
 
@@ -293,12 +307,13 @@ namespace GDI.Services
         {
             robotHandlePtr = IntPtr.Zero;
 
-            c_ini.position.x = 0;
-            c_ini.position.y = 0;
-            c_ini.position.z = 0.5f;
-            c_ini.euler.rx = -3.14f;
-            c_ini.euler.ry = (float)(-1.570f + Math.PI / 23);
-            c_ini.euler.rz = 3.14f;
+            //c_ini.position.x = 0;
+            //c_ini.position.y = 0;
+            //c_ini.position.z = 0.5f;
+            //c_ini.euler.rx = -3.14f;
+            //c_ini.euler.ry = (float)(-1.570f + Math.PI / 23);
+            //c_ini.euler.rz = 3.14f;
+
 
             paramsConfig.port = 1;     // 末端接口
             paramsConfig.device = 1;   // 传感器站号
@@ -310,40 +325,27 @@ namespace GDI.Services
 
         private static int arm_Move(float len, float wid, float height, bool N_or_Z, int count, int vol)
         {
-            height += 0.265f;  //0.2477
+            height += 0.26f;
             int ret = 0;
             int r = 0;  // 交融半径
             int trajectory_connect = 0; // 轨迹连接
             int block = 1; // 阻塞
-            rm_current_arm_state_t state = new rm_current_arm_state_t();
-            rm_pose_t c_1 = new();
-            rm_pose_t c_2 = new();
-            //rm_pose_t c = new();   // 工作平面
-            //c.position.x = -0.288f;
-            //c.position.y = 0.360f;
-            //c.position.z = 0.6f;
-            //c.euler.rx = -(float)Math.PI / 2;
-            //c.euler.ry = 0;
-            //c.euler.rz = -(float)Math.PI / 2;
-            //rm_delete_work_frame(Arm.Instance.robotHandlePtr, "work1");
-            //rm_set_manual_work_frame(Arm.Instance.robotHandlePtr, "work1", c);
-            //rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
 
             rm_pose_t c2 = new();   // 运动位姿
             c2.position.x = 0.05f;
-            c2.position.y = 0.05f;
+            c2.position.y = 0.25f;
             c2.position.z = height;
             c2.euler.rx = (float)Math.PI;
             c2.euler.ry = 0;
-            c2.euler.rz = (float)Math.PI;
+            c2.euler.rz = (float)Math.PI / 2;
 
             rm_pose_t c3 = new();   // 运动位姿
             c3.position.x = 0.05f;
-            c3.position.y = 0.05f + len;
+            c3.position.y = 0.25f + len;
             c3.position.z = height;
             c3.euler.rx = (float)Math.PI;
             c3.euler.ry = 0;
-            c3.euler.rz = (float)Math.PI;
+            c3.euler.rz = (float)Math.PI / 2;
 
             rm_pose_t c4 = new();   // 运动位姿
             c4.position.x = 0.05f;
@@ -361,47 +363,29 @@ namespace GDI.Services
             c5.euler.ry = 0;
             c5.euler.rz = -(float)Math.PI / 2;
 
-            if (N_or_Z) { c_1 = c4; c_2 = c5; }
-            else { c_1 = c2; c_2 = c3; }
-
+            rm_movej_p(Arm.Instance.robotHandlePtr, N_or_Z ? c4 : c2, 20, r, 1, 0);
             for (int i = 0; i < count; i++)
             {
-                rm_movej_p(Arm.Instance.robotHandlePtr, c_1, 15, r, trajectory_connect, block);
+                rm_movel(Arm.Instance.robotHandlePtr, N_or_Z ? c4 : c2, vol, r, 1, 0);
 
-                rm_movel(Arm.Instance.robotHandlePtr, c_2, vol, r, trajectory_connect, 0);
-                while (!IsCloseTo(state.pose.position, c_2.position))
-                {
-                    Thread.Sleep(50);
-                    if (Arm.Instance.distance < 218) //209.7
-                    {
-                        rm_set_arm_stop(Arm.Instance.robotHandlePtr);
-                        c_2.position.z += 0.001f;
-                        rm_movel(Arm.Instance.robotHandlePtr, c_2, vol, r, trajectory_connect, 0);
-                    }
-                    if (Arm.Instance.distance > 228)  //219.7
-                    {
-                        rm_set_arm_stop(Arm.Instance.robotHandlePtr);
-                        c_2.position.z -= 0.001f;
-                        rm_movel(Arm.Instance.robotHandlePtr, c_2, vol, r, trajectory_connect, 0);
-                    }
-                    rm_get_current_arm_state(Arm.Instance.robotHandlePtr, ref state);
-                }
-                rm_set_arm_stop(Arm.Instance.robotHandlePtr);
+                if (i == count) { trajectory_connect = 0; block = 1; }
+                rm_movel(Arm.Instance.robotHandlePtr, N_or_Z ? c5 : c3, vol, r, trajectory_connect, block);
 
                 if (!N_or_Z)
                 {
-                    c_1.position.x += wid;
-                    c_2.position.x += wid;
+                    c2.position.x += wid;
+                    c3.position.x += wid;
                 }
                 else
                 {
-                    c_1.position.y += len;
-                    c_2.position.y += len;
+                    c4.position.y += len;
+                    c5.position.y += len;
                 }
             }
 
             rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
-            rm_movej_p(Arm.Instance.robotHandlePtr, Arm.Instance.c_ini, 20, 0, 0, 1);
+            rm_movej(Arm.Instance.robotHandlePtr, c_ini, 20, 0, 0, 1);
+            rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
             return ret;
         }
 
@@ -418,17 +402,19 @@ namespace GDI.Services
             else
                 MessageBox.Show("[rm_create_robot_arm] connect error:" + robotHandle.id);
 
+            // 移动初始位置
             rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
-            int ret = rm_movej_p(Arm.Instance.robotHandlePtr, Arm.Instance.c_ini, 20, 0, 0, 1);
+            int ret = rm_movej(Arm.Instance.robotHandlePtr, c_ini, 20, 0, 0, 1);
             if (ret != 0) MessageBox.Show("[rm_move_joint] Error occurred: " + ret);
+
+            // 假设标定
+            CameraService cam = new CameraService();
+            cam.CDAction = cam.Init;
+            cam.cam_Thread_start();
+            Thread.Sleep(8000);
+            cam.cam_Thread_stop();
         }
 
-
-        private static bool IsCloseTo(rm_position_t a, rm_position_t tar)
-        {
-            return a.x > tar.x - 0.01f && a.x < tar.x + 0.01f
-                    && a.y > tar.y - 0.01f && a.y < tar.y + 0.01f;
-        }
 
 
         public void move(float len, float wid, float height, bool N, int count, int vol)

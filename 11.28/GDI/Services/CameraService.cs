@@ -19,12 +19,15 @@ namespace GDI.Services
         private Thread camServ;
 
         public Action<Bitmap, Bitmap> camAction;
-        public Action<Bitmap> rsAction;
+        //public Action<Bitmap> rsAction;
+        public Action<Bitmap, DepthFrame, Intrinsics> CDAction;    //吴名添加
 
         private void cam_Thread(CancellationToken token)
         {
             var cfg = new Config();
             pipe = new Pipeline();
+            var intrinsics = new Intrinsics();    //吴名添加
+
             // 配置相机
             // 这一段是照抄官方的 tutorial
             // https://github.com/realsenseai/librealsense/blob/master/wrappers/csharp/tutorial/capture/Window.xaml.cs
@@ -60,7 +63,7 @@ namespace GDI.Services
             PipelineProfile pp = pipe.Start(cfg);
             Console.WriteLine("相机已启动");
             var profile = pp.GetStream(Intel.RealSense.Stream.Depth).As<VideoStreamProfile>();
-            var intrinsics = profile.GetIntrinsics();
+            intrinsics = profile.GetIntrinsics();
 
             // 自带过滤器，实间，空间，孔洞填充等
             Align align = new Align(Intel.RealSense.Stream.Color);
@@ -68,6 +71,10 @@ namespace GDI.Services
             TemporalFilter temporal = new TemporalFilter();
             HoleFillingFilter holoFillingFilter = new HoleFillingFilter();
             Colorizer color_map = new Colorizer();
+
+            DateTime lastCallbackTime = DateTime.Now;
+            bool is_CD = false;                                      //吴名添加
+
             while (!token.IsCancellationRequested)
             {
                 using (var frames = pipe.WaitForFrames(5000))
@@ -103,32 +110,11 @@ namespace GDI.Services
                     // 相机/深度图显示到 UI窗口
                     camAction(ColorBitmap, DepthColorBitmap);
 
-
-                    // 
-                    rm_position_t q_tool;
-                    rm_position_t p_tool;
-                    rm_position_t o_tool;
-                    rm_current_arm_state_t state = new rm_current_arm_state_t();
-                    q_tool.z = depthFrame.GetDistance(180, 20);
-                    q_tool.x = (180 - intrinsics.ppx) * q_tool.z / intrinsics.fx;
-                    q_tool.y = (20 - intrinsics.ppy) * q_tool.z / intrinsics.fy;
-                    p_tool.z = depthFrame.GetDistance(180, 40);
-                    p_tool.x = (180 - intrinsics.ppx) * p_tool.z / intrinsics.fx;
-                    p_tool.y = (40 - intrinsics.ppy) * p_tool.z / intrinsics.fy;
-                    o_tool.z = depthFrame.GetDistance(200, 20);
-                    o_tool.x = (200 - intrinsics.ppx) * o_tool.z / intrinsics.fx;
-                    o_tool.y = (20 - intrinsics.ppy) * o_tool.z / intrinsics.fy;
-                    rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
-                    rm_get_current_arm_state(Arm.Instance.robotHandlePtr, ref state);
-                    rm_position_t q_base = CoordinateTransformer.TransformPoint(q_tool, state.pose);
-                    rm_position_t p_base = CoordinateTransformer.TransformPoint(p_tool, state.pose);
-                    rm_position_t o_base = CoordinateTransformer.TransformPoint(o_tool, state.pose);
-                    rm_pose_t set_base = CoordinateTransformCalculator.CalculatePose(q_base, p_base, o_base);
-                    rm_delete_work_frame(Arm.Instance.robotHandlePtr, "work1");
-                    rm_set_manual_work_frame(Arm.Instance.robotHandlePtr, "work1", set_base);
-                    int ret = rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
-                    if (ret == 0) MessageBox.Show("pose success!");
-                    else MessageBox.Show("pose fail!");
+                    if (!is_CD && DateTime.Now - lastCallbackTime >= TimeSpan.FromSeconds(6))
+                    {
+                        is_CD = true;
+                        CDAction(ColorBitmap, depthFrame, intrinsics);          //吴名添加
+                    }
                 }
             }
             if (pipe != null)
@@ -166,6 +152,89 @@ namespace GDI.Services
         {
             cts?.Cancel();
             
-        } 
+        }
+
+
+        //处理彩色图定位
+        private int[] ProcessBitmapPixels(Bitmap bitmap)
+        {
+            Color pixelColor;
+            int max_x_p = 0, max_y_p = 0;
+            int max_x_o = 0, max_y_o = 0;
+            int[] res = new int[6];
+            for (int y = 0; y < bitmap.Height; y++)
+            {
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    pixelColor = bitmap.GetPixel(x, y);
+                    if ((pixelColor.G > pixelColor.B * 3 / 2) && (pixelColor.R > pixelColor.B * 3 / 2))
+                    {
+                        if (y > max_y_p)
+                        {
+                            max_x_p = x;
+                            max_y_p = y;
+                        }
+                        if (x > max_x_o)
+                        {
+                            max_x_o = x;
+                            max_y_o = y;
+                        }
+                    }
+                }
+            }
+            int max_x_q = max_x_o, max_y_q = max_y_p;
+            for (int y = bitmap.Height - 1; y >= 0; y--)
+            {
+                for (int x = bitmap.Width - 1; x >= 0; x--)
+                {
+                    pixelColor = bitmap.GetPixel(x, y);
+                    if ((pixelColor.G > pixelColor.B * 3 / 2) && (pixelColor.R > pixelColor.B * 3 / 2))
+                    {
+                        if (x < max_x_q && y < max_y_q)
+                        {
+                            max_x_q = x;
+                            max_y_q = y;
+                        }
+                    }
+                }
+            }
+            res[0] = max_x_q; res[1] = max_y_q;
+            res[2] = max_x_p; res[3] = max_y_p;
+            res[4] = max_x_o; res[5] = max_y_o;
+            return res;
+        }
+
+        //标定方法
+        public void Init(Bitmap Cimg, DepthFrame Dimg, Intrinsics Intt)
+        {
+            rm_position_t q_tool;
+            rm_position_t p_tool;
+            rm_position_t o_tool;
+            rm_current_arm_state_t state = new rm_current_arm_state_t();
+            ProcessBitmapPixels(Cimg);
+            int[] res = ProcessBitmapPixels(Cimg);
+            q_tool.z = Dimg.GetDistance(res[0], res[1]);
+            q_tool.x = (res[0] - Intt.ppx) * q_tool.z / Intt.fx;
+            q_tool.y = (res[1] - Intt.ppy) * q_tool.z / Intt.fy;
+            p_tool.z = Dimg.GetDistance(res[2], res[3]);
+            p_tool.x = (res[2] - Intt.ppx) * p_tool.z / Intt.fx;
+            p_tool.y = (res[3] - Intt.ppy) * p_tool.z / Intt.fy;
+            o_tool.z = Dimg.GetDistance(res[4], res[5]);
+            o_tool.x = (res[4] - Intt.ppx) * o_tool.z / Intt.fx;
+            o_tool.y = (res[5] - Intt.ppy) * o_tool.z / Intt.fy;
+            rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
+            rm_get_current_arm_state(Arm.Instance.robotHandlePtr, ref state);
+            rm_position_t q_base = CoordinateTransformer.TransformPoint(q_tool, state.pose);
+            rm_position_t p_base = CoordinateTransformer.TransformPoint(p_tool, state.pose);
+            rm_position_t o_base = CoordinateTransformer.TransformPoint(o_tool, state.pose);
+            rm_pose_t set_base = CoordinateTransformCalculator.CalculatePose(q_base, p_base, o_base);
+            rm_delete_work_frame(Arm.Instance.robotHandlePtr, "work1");
+            rm_set_manual_work_frame(Arm.Instance.robotHandlePtr, "work1", set_base);
+            int ret = rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
+            if (ret == 0) MessageBox.Show("ini success!");
+            else MessageBox.Show("pose fail!");
+        }
+
+
     }
 }

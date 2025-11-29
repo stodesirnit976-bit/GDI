@@ -194,13 +194,13 @@ namespace GDI.Core
                     case "模板1":
                         {
                             g.DrawString("载", font, brush, 0, 0, sf);
-                            g.DrawString("重", font, brush, 1649 + 353, 0, sf);
+                            g.DrawString("重", font, brush, 1649 + tpl.CharSpacing, 0, sf);
 
                             g.DrawString("自", font, brush, 0, 1649 + tpl.LineSpacing, sf);
-                            g.DrawString("重", font, brush, 1649 + 353, 1649 + tpl.LineSpacing, sf);
+                            g.DrawString("重", font, brush, 1649 + tpl.CharSpacing, 1649 + tpl.LineSpacing, sf);
 
                             g.DrawString("容", font, brush, 0, (1649 + tpl.LineSpacing) * 2, sf);
-                            g.DrawString("积", font, brush, 1649 + 353, (1649 + tpl.LineSpacing) * 2, sf);
+                            g.DrawString("积", font, brush, 1649 + tpl.CharSpacing, (1649 + tpl.LineSpacing) * 2, sf);
 
                             float ascent = 0;//Font对应的实际像素高度
                             float yBaseline = 0;
@@ -297,7 +297,7 @@ namespace GDI.Core
                             //第二行
                             currentY += (tpl.BigFont + tpl.LineSpacing);
                             chunks = TextRender.ParseText(info.trans, tpl.BigFont, tpl.SmallFont);
-                            currentX = 1649 * 2 + 6400;
+                            currentX = 1649 * 2 + 2800;
                             foreach (var chunk in chunks)
                             {
                                 using (Font font2 = new Font("宋体", chunk.FontSize, GraphicsUnit.Pixel))

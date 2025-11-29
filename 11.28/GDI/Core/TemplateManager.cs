@@ -20,7 +20,7 @@ namespace GDI.Core
                     Height = 5890,
                     BigFont = 1649,
                     SmallFont = 1178,
-                    CharSpacing = 100,
+                    CharSpacing = 200,
                     LineSpacing = 400,
                 },
 
@@ -31,7 +31,7 @@ namespace GDI.Core
                     Height = 4712,
                     BigFont = 1649,
                     SmallFont = 1178,
-                    CharSpacing = 100,
+                    CharSpacing = 200,
                     LineSpacing = 200,
                 },
 
