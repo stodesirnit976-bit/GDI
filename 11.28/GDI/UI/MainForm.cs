@@ -117,14 +117,20 @@ namespace GDI
         // ===================================================================================================
         private void btn_SysInit_Click(object sender, EventArgs e)
         {
+            if (detailForm == null || detailForm.IsDisposed)
+            {
+                detailForm = new Form1();
+                var handle = detailForm.Handle; // 强制创建句柄
+            }
+
             // 启动socket服务
             detailForm.socket_Start();
             // 启动相机服务
-            cam_Start();
+            //cam_Start();
             // 启动激光测距传感器
-            detailForm.laser_Start();
+            //detailForm.laser_Start();
             // 初始化机械臂并恢复初始化姿态
-            detailForm.arm_Init();           
+            //detailForm.arm_Init();           
             // 关闭喷印系统触发io?要看这里具体怎么触发，调整
 
         }

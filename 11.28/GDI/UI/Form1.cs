@@ -102,9 +102,9 @@ namespace GDI
             btnConnect.Enabled = false;
 
             socket_Init();
-            
-            string ip = (string)comboBox_ip.SelectedItem; // 这里等等改成固定ip
 
+            //string ip = (string)comboBox_ip.SelectedItem; // 这里等等改成固定ip
+            string ip = "192.168.0.112";
             client9837.Connect(ip, 9837); // 连控制口
             client8080.Connect(ip, 8080); // 连数据口
 
