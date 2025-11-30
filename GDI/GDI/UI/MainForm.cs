@@ -126,7 +126,8 @@ namespace GDI
             }
 
             // 启动socket服务
-            detailForm.socket_Start();
+            // 默认初始化只连接9837端口，8080靠9837发送命令启动/关闭
+            detailForm.socket9837_Connect();
             
             // 启动激光测距传感器
             detailForm.laser_Start();
@@ -136,14 +137,12 @@ namespace GDI
             
             // 等待机械臂初始化完成
             // 启动相机服务
-            if (ret == 6)
-                cam_Start();
-            
-            
+            //if (ret == 6)
+                //cam_Start();  
 
         }
 
-
+        
 
 
         // ===================================================================================================
@@ -225,6 +224,27 @@ namespace GDI
                 }
             }
 
+
+            // 图片生成完成后？
+            // 9837发送指令打开喷印系统->连接8080端口->
+            // （socket自动发送文件路径）
+            // 机械臂启动 ->机械臂运动到位，io触发喷印
+            // 喷印结束，9837发送指令关闭喷印系统
+            // 喷印下一张图片，重复上述过程
+
+        }
+
+        private void logic_func()
+        {
+            detailForm.socket9837_Send("@StartPrint@");
+
+            detailForm.socket8080_Connect();
+
+            // 机械臂启动
+            detailForm.arm_Start();
+
+            // 怎么确定喷印结束？阻塞？不好急停不靠谱，
+            detailForm.socket9837_Send("@StopPrint@");
         }
 
 
@@ -295,8 +315,7 @@ namespace GDI
         private void cam_Start()
         {
             cam.cam_Thread_start();
-
-            
+         
             // 订阅相机事件，进行标定
             calib.Calibration_subCamEvent(cam);
 
@@ -348,15 +367,6 @@ namespace GDI
                     GraphicsUnit.Pixel, ia);
             }
         }
-
-
-
-
-
-
-
-
-
 
         
     }

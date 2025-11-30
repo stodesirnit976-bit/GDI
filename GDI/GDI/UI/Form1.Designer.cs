@@ -91,7 +91,8 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.btn9837Send = new System.Windows.Forms.Button();
             this.btn8080Send = new System.Windows.Forms.Button();
-            this.btnConnect = new System.Windows.Forms.Button();
+            this.btn8080Connect = new System.Windows.Forms.Button();
+            this.btn9837Connect = new System.Windows.Forms.Button();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label27 = new System.Windows.Forms.Label();
             this.comboBox_ip = new System.Windows.Forms.ComboBox();
@@ -118,9 +119,9 @@
             this.groupBox2.Controls.Add(this.btnArmInit);
             this.groupBox2.Controls.Add(this.tabControl2);
             this.groupBox2.Location = new System.Drawing.Point(527, 454);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox2.Size = new System.Drawing.Size(470, 454);
             this.groupBox2.TabIndex = 35;
             this.groupBox2.TabStop = false;
@@ -200,7 +201,7 @@
             this.tabPage3.Controls.Add(this.label15);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(434, 326);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "模版";
@@ -209,7 +210,7 @@
             // tbx_Height
             // 
             this.tbx_Height.Location = new System.Drawing.Point(59, 151);
-            this.tbx_Height.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbx_Height.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_Height.Name = "tbx_Height";
             this.tbx_Height.Size = new System.Drawing.Size(113, 21);
             this.tbx_Height.TabIndex = 17;
@@ -307,7 +308,7 @@
             this.tabPage4.Controls.Add(this.label21);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(434, 326);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "高级";
@@ -491,9 +492,9 @@
             this.groupBox3.Controls.Add(this.label_test);
             this.groupBox3.Controls.Add(this.label30);
             this.groupBox3.Location = new System.Drawing.Point(527, 28);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox3.Size = new System.Drawing.Size(470, 409);
             this.groupBox3.TabIndex = 35;
             this.groupBox3.TabStop = false;
@@ -701,16 +702,17 @@
             this.groupBox5.Controls.Add(this.btnClose);
             this.groupBox5.Controls.Add(this.btn9837Send);
             this.groupBox5.Controls.Add(this.btn8080Send);
-            this.groupBox5.Controls.Add(this.btnConnect);
+            this.groupBox5.Controls.Add(this.btn8080Connect);
+            this.groupBox5.Controls.Add(this.btn9837Connect);
             this.groupBox5.Controls.Add(this.comboBox2);
             this.groupBox5.Controls.Add(this.label27);
             this.groupBox5.Controls.Add(this.comboBox_ip);
             this.groupBox5.Controls.Add(this.label22);
             this.groupBox5.Font = new System.Drawing.Font("宋体", 11F);
             this.groupBox5.Location = new System.Drawing.Point(10, 11);
-            this.groupBox5.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox5.Size = new System.Drawing.Size(358, 898);
             this.groupBox5.TabIndex = 35;
             this.groupBox5.TabStop = false;
@@ -775,7 +777,7 @@
             // btnClear
             // 
             this.btnClear.Font = new System.Drawing.Font("宋体", 11F);
-            this.btnClear.Location = new System.Drawing.Point(15, 766);
+            this.btnClear.Location = new System.Drawing.Point(6, 766);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(111, 32);
             this.btnClear.TabIndex = 0;
@@ -786,7 +788,7 @@
             // btnClose
             // 
             this.btnClose.Font = new System.Drawing.Font("宋体", 11F);
-            this.btnClose.Location = new System.Drawing.Point(235, 766);
+            this.btnClose.Location = new System.Drawing.Point(241, 826);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(111, 32);
             this.btnClose.TabIndex = 0;
@@ -797,7 +799,7 @@
             // btn9837Send
             // 
             this.btn9837Send.Font = new System.Drawing.Font("宋体", 11F);
-            this.btn9837Send.Location = new System.Drawing.Point(239, 826);
+            this.btn9837Send.Location = new System.Drawing.Point(240, 766);
             this.btn9837Send.Name = "btn9837Send";
             this.btn9837Send.Size = new System.Drawing.Size(111, 32);
             this.btn9837Send.TabIndex = 0;
@@ -808,7 +810,7 @@
             // btn8080Send
             // 
             this.btn8080Send.Font = new System.Drawing.Font("宋体", 11F);
-            this.btn8080Send.Location = new System.Drawing.Point(122, 826);
+            this.btn8080Send.Location = new System.Drawing.Point(123, 766);
             this.btn8080Send.Name = "btn8080Send";
             this.btn8080Send.Size = new System.Drawing.Size(111, 32);
             this.btn8080Send.TabIndex = 0;
@@ -816,23 +818,34 @@
             this.btn8080Send.UseVisualStyleBackColor = true;
             this.btn8080Send.Click += new System.EventHandler(this.btn8080Send_Click);
             // 
-            // btnConnect
+            // btn8080Connect
             // 
-            this.btnConnect.Font = new System.Drawing.Font("宋体", 11F);
-            this.btnConnect.Location = new System.Drawing.Point(2, 826);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(111, 32);
-            this.btnConnect.TabIndex = 0;
-            this.btnConnect.Text = "连接UV喷印";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            this.btn8080Connect.Font = new System.Drawing.Font("宋体", 11F);
+            this.btn8080Connect.Location = new System.Drawing.Point(124, 826);
+            this.btn8080Connect.Name = "btn8080Connect";
+            this.btn8080Connect.Size = new System.Drawing.Size(111, 32);
+            this.btn8080Connect.TabIndex = 0;
+            this.btn8080Connect.Text = "8080连接";
+            this.btn8080Connect.UseVisualStyleBackColor = true;
+            this.btn8080Connect.Click += new System.EventHandler(this.btn8080Connect_Click);
+            // 
+            // btn9837Connect
+            // 
+            this.btn9837Connect.Font = new System.Drawing.Font("宋体", 11F);
+            this.btn9837Connect.Location = new System.Drawing.Point(2, 826);
+            this.btn9837Connect.Name = "btn9837Connect";
+            this.btn9837Connect.Size = new System.Drawing.Size(111, 32);
+            this.btn9837Connect.TabIndex = 0;
+            this.btn9837Connect.Text = "9837链接";
+            this.btn9837Connect.UseVisualStyleBackColor = true;
+            this.btn9837Connect.Click += new System.EventHandler(this.btn9837Connect_Click);
             // 
             // comboBox2
             // 
             this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(269, 17);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(78, 23);
             this.comboBox2.TabIndex = 4;
@@ -853,7 +866,7 @@
             this.comboBox_ip.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_ip.FormattingEnabled = true;
             this.comboBox_ip.Location = new System.Drawing.Point(58, 17);
-            this.comboBox_ip.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox_ip.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox_ip.Name = "comboBox_ip";
             this.comboBox_ip.Size = new System.Drawing.Size(161, 23);
             this.comboBox_ip.TabIndex = 4;
@@ -879,7 +892,7 @@
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
@@ -971,11 +984,12 @@
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btn9837Send;
         private System.Windows.Forms.Button btn8080Send;
-        private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.Button btn9837Connect;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.ComboBox comboBox_ip;
         private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Button btn8080Connect;
     }
 }
 

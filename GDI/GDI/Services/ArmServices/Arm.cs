@@ -299,10 +299,9 @@ namespace GDI.Services
         //    }
         //}
 
-        private static float[] c_ini = { 0, 94, -129.5f, 0, -62.4f, 0 };
+        public static float[] c_ini;
 
         // ==========================================
-
         private Arm()
         {
             robotHandlePtr = IntPtr.Zero;
@@ -314,11 +313,17 @@ namespace GDI.Services
             //c_ini.euler.ry = (float)(-1.570f + Math.PI / 23);
             //c_ini.euler.rz = 3.14f;
 
-
             paramsConfig.port = 1;     // 末端接口
             paramsConfig.device = 1;   // 传感器站号
             paramsConfig.address = 0;  // 起始地址
             paramsConfig.num = 3;      // 读2个寄存器 (对应4个字节)
+
+            c_ini[0] = 0;
+            c_ini[1] = 94;
+            c_ini[2] = -129.5f;
+            c_ini[3] = 0;
+            c_ini[4] = -62.4f;
+            c_ini[5] = 0;
 
         }
 

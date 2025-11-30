@@ -33,7 +33,7 @@ namespace GDI.Services.CameraServices
         {
             if ((DateTime.Now - startTime).TotalSeconds < 7) return;
 
-            Console.WriteLine("相机启动超过6秒，处理这一帧的标定");
+            Console.WriteLine("相机启动超过7秒，处理这一帧的标定");
             // 处理帧数据进行标定
             Init(ColorBitmap, depthFrame, intrinsics);
 
@@ -41,6 +41,8 @@ namespace GDI.Services.CameraServices
             cam.cam_Event -= imgProcessor;
 
             isCalibrating = false;
+
+            float[] a = c_ini;
         }
 
 

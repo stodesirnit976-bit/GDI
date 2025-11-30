@@ -4,6 +4,7 @@ using Intel.RealSense;
 using System;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -69,29 +70,55 @@ namespace GDI.Services
             var profile = pp.GetStream(Intel.RealSense.Stream.Depth).As<VideoStreamProfile>();
             intrinsics = profile.GetIntrinsics();
 
+            // 对齐过滤器
+            Align align = new Align(Intel.RealSense.Stream.Color);
             // 过滤器：实间，空间，孔洞填充等
             SpatialFilter spat_filter = new SpatialFilter();
             TemporalFilter temporal = new TemporalFilter();
             HoleFillingFilter holoFillingFilter = new HoleFillingFilter();
             Colorizer color_map = new Colorizer();
-            // 对齐过滤器
-            Align align = new Align(Intel.RealSense.Stream.Color);
 
-            DateTime lastCallbackTime = DateTime.Now;
-            //bool is_CD = false;                                      //吴名添加
+            // set colorizer to a less-noisy visualization if desired
+            try
+            {
+                // 2 -> BlackToWhite is typically what Intel Viewer shows
+                //color_map.Options[Option.ColorScheme].Value = 15;
+                color_map.Options[Option.HistogramEqualizationEnabled].Value = 0;
+                color_map.Options[Option.MinDistance].Value = 0.0f;
+                color_map.Options[Option.MaxDistance].Value = 6.0f;
+                color_map.Options[Option.VisualPreset].Value = 0;
+            }
+            catch { }
+
+
+            // tuning spatial/temporal/hole parameters for better planar stability
+            try
+            {
+                spat_filter.Options[Option.FilterMagnitude].Value = 5;
+                spat_filter.Options[Option.FilterSmoothAlpha].Value = 0.5f;
+                spat_filter.Options[Option.FilterSmoothDelta].Value = 20;
+
+
+                temporal.Options[Option.FilterSmoothAlpha].Value = 0.4f;
+                temporal.Options[Option.FilterSmoothDelta].Value = 20;
+
+
+                holoFillingFilter.Options[Option.HolesFill].Value = 39; // conservative
+            }
+            catch { }
+
+
 
             while (!token.IsCancellationRequested)
             {
-                using (var frames = pipe.WaitForFrames(10000))
+                using (var frames = pipe.WaitForFrames(5000))
                 {
-                    // 1.空间滤波
-                    Frame aligned = spat_filter.Process(frames).DisposeWith(frames);
-                    // 2.孔洞填充
-                    aligned = holoFillingFilter.Process(aligned).DisposeWith(frames);
-                    // 3.时间滤波
+                    Frame aligned = align.Process(frames).DisposeWith(frames);
+                    aligned = spat_filter.Process(aligned).DisposeWith(frames);
                     aligned = temporal.Process(aligned).DisposeWith(frames);
-                    // 4.执行对齐
-                    aligned = align.Process(aligned).DisposeWith(frames);
+                    aligned = holoFillingFilter.Process(aligned).DisposeWith(frames);
+                   
+
                     // 5.类型转换，把 Frame类 转换成 FrameSet 类
                     FrameSet alignedframeset = aligned.As<FrameSet>().DisposeWith(frames);
 
