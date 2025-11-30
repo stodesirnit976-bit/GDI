@@ -11,7 +11,7 @@ using static GDI.Services.Arm;
 
 namespace GDI.Services
 {
-    public class CameraService
+    public class Camera
     {
         private Pipeline pipe;
 
@@ -20,7 +20,10 @@ namespace GDI.Services
 
         public Action<Bitmap, Bitmap> camAction;
         //public Action<Bitmap> rsAction;
-        public Action<Bitmap, DepthFrame, Intrinsics> CDAction;    //吴名添加
+        //public Action<Bitmap, DepthFrame, Intrinsics> CDAction;    //吴名添加
+
+        // 对外输出一帧图像的事件
+        public event Action<Bitmap, Bitmap, DepthFrame,Intrinsics> cam_Event;
 
         private void cam_Thread(CancellationToken token)
         {
@@ -56,33 +59,33 @@ namespace GDI.Services
                 // 配置相机宽高，帧数
                 cfg.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 30);
                 // 这里注意 GDI Bitmap 中，像素排列是 BGR 而不是 RGB
-                cfg.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 30);
-                // 启动相机                
+                cfg.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 30);                 
             }
 
+            // 启动相机     
             PipelineProfile pp = pipe.Start(cfg);
             Console.WriteLine("相机已启动");
+            // 获取相机内参
             var profile = pp.GetStream(Intel.RealSense.Stream.Depth).As<VideoStreamProfile>();
             intrinsics = profile.GetIntrinsics();
 
-            // 自带过滤器，实间，空间，孔洞填充等
-            Align align = new Align(Intel.RealSense.Stream.Color);
+            // 过滤器：实间，空间，孔洞填充等
             SpatialFilter spat_filter = new SpatialFilter();
             TemporalFilter temporal = new TemporalFilter();
             HoleFillingFilter holoFillingFilter = new HoleFillingFilter();
             Colorizer color_map = new Colorizer();
+            // 对齐过滤器
+            Align align = new Align(Intel.RealSense.Stream.Color);
 
             DateTime lastCallbackTime = DateTime.Now;
-            bool is_CD = false;                                      //吴名添加
+            //bool is_CD = false;                                      //吴名添加
 
             while (!token.IsCancellationRequested)
             {
-                using (var frames = pipe.WaitForFrames(5000))
+                using (var frames = pipe.WaitForFrames(10000))
                 {
-                    // 创建对齐器
-                    //Align align = new Align(Intel.RealSense.Stream.Color).DisposeWith(frames);   
                     // 1.空间滤波
-                    Intel.RealSense.Frame aligned = spat_filter.Process(frames).DisposeWith(frames);
+                    Frame aligned = spat_filter.Process(frames).DisposeWith(frames);
                     // 2.孔洞填充
                     aligned = holoFillingFilter.Process(aligned).DisposeWith(frames);
                     // 3.时间滤波
@@ -104,17 +107,11 @@ namespace GDI.Services
                     // FrameSet 转 Bitmap
                     Bitmap ColorBitmap = FrameToBitmap(colorFrame);
                     Bitmap DepthColorBitmap = FrameToBitmap(colorizedDepth);
+                    // 抛事件
+                    cam_Event?.Invoke(ColorBitmap, DepthColorBitmap, depthFrame, intrinsics);
 
-                    // 转Bitmap
-                    // 直接用bitmap复制不安全，因为此时 bitmap 只是指向了原图的内存地址，需要用 bitmap img = new bitmap(rawimg);复制一份
-                    // 相机/深度图显示到 UI窗口
-                    camAction(ColorBitmap, DepthColorBitmap);
-
-                    if (!is_CD && DateTime.Now - lastCallbackTime >= TimeSpan.FromSeconds(6))
-                    {
-                        is_CD = true;
-                        CDAction(ColorBitmap, depthFrame, intrinsics);          //吴名添加
-                    }
+                    ColorBitmap?.Dispose();
+                    DepthColorBitmap?.Dispose();
                 }
             }
             if (pipe != null)
@@ -139,6 +136,7 @@ namespace GDI.Services
             }
         }
 
+
         // 启动相机线程
         public void cam_Thread_start()
         {
@@ -150,91 +148,15 @@ namespace GDI.Services
         // 停止相机线程
         public void cam_Thread_stop()
         {
-            cts?.Cancel();
-            
-        }
-
-
-        //处理彩色图定位
-        private int[] ProcessBitmapPixels(Bitmap bitmap)
-        {
-            Color pixelColor;
-            int max_x_p = 0, max_y_p = 0;
-            int max_x_o = 0, max_y_o = 0;
-            int[] res = new int[6];
-            for (int y = 0; y < bitmap.Height; y++)
+            if (cts != null)
             {
-                for (int x = 0; x < bitmap.Width; x++)
-                {
-                    pixelColor = bitmap.GetPixel(x, y);
-                    if ((pixelColor.G > pixelColor.B * 3 / 2) && (pixelColor.R > pixelColor.B * 3 / 2))
-                    {
-                        if (y > max_y_p)
-                        {
-                            max_x_p = x;
-                            max_y_p = y;
-                        }
-                        if (x > max_x_o)
-                        {
-                            max_x_o = x;
-                            max_y_o = y;
-                        }
-                    }
-                }
+                cts.Cancel();
+                cts = null;
             }
-            int max_x_q = max_x_o, max_y_q = max_y_p;
-            for (int y = bitmap.Height - 1; y >= 0; y--)
-            {
-                for (int x = bitmap.Width - 1; x >= 0; x--)
-                {
-                    pixelColor = bitmap.GetPixel(x, y);
-                    if ((pixelColor.G > pixelColor.B * 3 / 2) && (pixelColor.R > pixelColor.B * 3 / 2))
-                    {
-                        if (x < max_x_q && y < max_y_q)
-                        {
-                            max_x_q = x;
-                            max_y_q = y;
-                        }
-                    }
-                }
-            }
-            res[0] = max_x_q; res[1] = max_y_q;
-            res[2] = max_x_p; res[3] = max_y_p;
-            res[4] = max_x_o; res[5] = max_y_o;
-            return res;
+            camServ = null;
         }
 
-        //标定方法
-        public void Init(Bitmap Cimg, DepthFrame Dimg, Intrinsics Intt)
-        {
-            rm_position_t q_tool;
-            rm_position_t p_tool;
-            rm_position_t o_tool;
-            rm_current_arm_state_t state = new rm_current_arm_state_t();
-            ProcessBitmapPixels(Cimg);
-            int[] res = ProcessBitmapPixels(Cimg);
-            q_tool.z = Dimg.GetDistance(res[0], res[1]);
-            q_tool.x = (res[0] - Intt.ppx) * q_tool.z / Intt.fx;
-            q_tool.y = (res[1] - Intt.ppy) * q_tool.z / Intt.fy;
-            p_tool.z = Dimg.GetDistance(res[2], res[3]);
-            p_tool.x = (res[2] - Intt.ppx) * p_tool.z / Intt.fx;
-            p_tool.y = (res[3] - Intt.ppy) * p_tool.z / Intt.fy;
-            o_tool.z = Dimg.GetDistance(res[4], res[5]);
-            o_tool.x = (res[4] - Intt.ppx) * o_tool.z / Intt.fx;
-            o_tool.y = (res[5] - Intt.ppy) * o_tool.z / Intt.fy;
-            rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
-            rm_get_current_arm_state(Arm.Instance.robotHandlePtr, ref state);
-            rm_position_t q_base = CoordinateTransformer.TransformPoint(q_tool, state.pose);
-            rm_position_t p_base = CoordinateTransformer.TransformPoint(p_tool, state.pose);
-            rm_position_t o_base = CoordinateTransformer.TransformPoint(o_tool, state.pose);
-            rm_pose_t set_base = CoordinateTransformCalculator.CalculatePose(q_base, p_base, o_base);
-            rm_delete_work_frame(Arm.Instance.robotHandlePtr, "work1");
-            rm_set_manual_work_frame(Arm.Instance.robotHandlePtr, "work1", set_base);
-            int ret = rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
-            if (ret == 0) MessageBox.Show("ini success!");
-            else MessageBox.Show("pose fail!");
-        }
-
+       
 
     }
 }

@@ -397,22 +397,15 @@ namespace GDI.Services
             Arm.Instance.robotHandlePtr = rm_create_robot_arm("192.168.22.18", 8080);
             rm_robot_handle robotHandle = (rm_robot_handle)Marshal.PtrToStructure(Arm.Instance.robotHandlePtr, typeof(rm_robot_handle))!;
 
-            if (Arm.Instance.robotHandlePtr != IntPtr.Zero && robotHandle.id > 0)
-                MessageBox.Show("Arm Init Success!");
-            else
-                MessageBox.Show("[rm_create_robot_arm] connect error:" + robotHandle.id);
-
             // 移动初始位置
             rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
             int ret = rm_movej(Arm.Instance.robotHandlePtr, c_ini, 20, 0, 0, 1);
             if (ret != 0) MessageBox.Show("[rm_move_joint] Error occurred: " + ret);
 
-            // 假设标定
-            CameraService cam = new CameraService();
-            cam.CDAction = cam.Init;
-            cam.cam_Thread_start();
-            Thread.Sleep(8000);
-            cam.cam_Thread_stop();
+            if (Arm.Instance.robotHandlePtr != IntPtr.Zero && robotHandle.id > 0)
+                MessageBox.Show("Arm Init Success!");
+            else
+                MessageBox.Show("[rm_create_robot_arm] connect error:" + robotHandle.id);
         }
 
 

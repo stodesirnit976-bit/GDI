@@ -1,6 +1,8 @@
 ﻿using GDI.Core;
 using GDI.Models;
 using GDI.Services;
+using GDI.Services.CameraServices;
+using Intel.RealSense;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,17 +39,17 @@ namespace GDI
 
         public MainForm()
         {
-
             InitializeComponent();
 
+            // 初始化,让PictureBox适应图片大小
+            pictureBox_Preview.SizeMode = PictureBoxSizeMode.Zoom;
 
-            pictureBox_Preview.SizeMode = PictureBoxSizeMode.Zoom;// 初始化,让PictureBox适应图片大小
-
-            // 双缓冲防闪烁
+            // panel开启双缓冲防闪烁
             typeof(Panel).InvokeMember("DoubleBuffered",
                 BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
                 null, panel1, new object[] { true });
 
+            // 初始化命名数
             count = 0;
         }
 
@@ -125,13 +127,19 @@ namespace GDI
 
             // 启动socket服务
             detailForm.socket_Start();
-            // 启动相机服务
-            //cam_Start();
+            
             // 启动激光测距传感器
-            //detailForm.laser_Start();
+            detailForm.laser_Start();
+
             // 初始化机械臂并恢复初始化姿态
-            //detailForm.arm_Init();           
-            // 关闭喷印系统触发io?要看这里具体怎么触发，调整
+            int ret = detailForm.arm_Init();
+            
+            // 等待机械臂初始化完成
+            // 启动相机服务
+            if (ret == 6)
+                cam_Start();
+            
+            
 
         }
 
@@ -276,7 +284,9 @@ namespace GDI
         // ===================================================================================================
         // ========================================= 深度相机画面 ============================================
         // ===================================================================================================
-        CameraService cam = new CameraService();
+        Camera cam = new Camera();
+        Calibration calib = new Calibration();
+
         private Bitmap imagecolor;
         private Bitmap imagedepth;
         private float alpha = 0.4f;
@@ -284,8 +294,14 @@ namespace GDI
         // -------- 相机启动 --------
         private void cam_Start()
         {
-            cam.camAction = Cam_Update;
             cam.cam_Thread_start();
+
+            
+            // 订阅相机事件，进行标定
+            calib.Calibration_subCamEvent(cam);
+
+            // 订阅相机事件，获取画面
+            cam.cam_Event += panel_Update;
         }
         // -------- 相机关闭 --------
         private void cam_stop()
@@ -294,15 +310,17 @@ namespace GDI
         }
 
         // -------- 委托回调更新相机画面 --------
-        private void Cam_Update(Bitmap color, Bitmap depth)
+        private void panel_Update(Bitmap color, Bitmap depth, DepthFrame a, Intrinsics b)
         {
+            Bitmap colorCopy = (Bitmap)color.Clone();
+            Bitmap depthCopy = (Bitmap)depth.Clone();
             this.BeginInvoke(new Action(() =>
             {
                 imagecolor?.Dispose();
                 imagedepth?.Dispose();
 
-                imagecolor = color;
-                imagedepth = depth;
+                imagecolor = colorCopy;
+                imagedepth = depthCopy;
 
                 panel1.Invalidate();
             }));

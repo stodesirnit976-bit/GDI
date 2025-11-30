@@ -21,6 +21,7 @@ namespace GDI.Services
         private Thread Laser_Thread;
         private CancellationTokenSource laser_cts;
 
+        public static double distance = 0.0;
         // ===================================================================================================
         // ======================================= 连接机械臂版本 ============================================
         // ===================================================================================================
@@ -46,9 +47,9 @@ namespace GDI.Services
                                        ((buffer[2] & 0xFF) << 8) |
                                        (buffer[3] & 0xFF);
 
-                    double distanceMm = rawDistance / 1000.0;
+                    distance = rawDistance / 1000.0;
 
-                    Console.WriteLine($"读取距离: {distanceMm} mm");
+                    Console.WriteLine($"读取距离: {distance} mm");
                 }
                 else
                 {

@@ -1,7 +1,6 @@
 ﻿using GDI.Core;
 using GDI.Models;
 using GDI.Services;
-using Modbus.Device;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -78,10 +77,13 @@ namespace GDI
 
 
         // ===================================================================================================
-        // ====================================== UI更新/跨线程参数传递 ======================================
+        // =============================== UI更新/跨线程参数传递/Test按钮 ====================================
         // ===================================================================================================
 
+        private void btn_camSTART_Click(object sender, EventArgs e)
+        {
 
+        }
 
 
 
@@ -104,7 +106,7 @@ namespace GDI
             socket_Init();
 
             //string ip = (string)comboBox_ip.SelectedItem; // 这里等等改成固定ip
-            string ip = "192.168.0.112";
+            string ip = "192.168.22.62";
             client9837.Connect(ip, 9837); // 连控制口
             client8080.Connect(ip, 8080); // 连数据口
 
@@ -243,12 +245,10 @@ namespace GDI
         // =============== 对外接口：给MainForm/form用 ===============
 
         // -------- 机械臂初始化 --------
-        public void arm_Init()
+        public int arm_Init()
         {
-            Task.Run(() =>
-            {
-                Arm.armInit();
-            });
+            Arm.armInit(); // 由于机械臂要移动到初始位置，后续相机标定等操作都要在机械臂初始化完成后进行，所以这里不启用新线程
+            return 6;
         }
 
         // -------- 机械臂关闭 --------
@@ -476,8 +476,7 @@ namespace GDI
             }));
         }
 
-
-
+        
     }
 
 }
