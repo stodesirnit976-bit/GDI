@@ -34,6 +34,7 @@ namespace GDI.Services
             int timeout = 10;
             int ret = rm_set_modbus_mode(Arm.Instance.robotHandlePtr, port, baudrate, timeout);
             int[] buffer = new int[20];
+            //rm_current_arm_state_t state_1 = new rm_current_arm_state_t();    //wm修改
 
             while (!token.IsCancellationRequested)
             {
@@ -53,8 +54,18 @@ namespace GDI.Services
                 }
                 else
                 {
-                    Console.WriteLine($"读取失败，错误码: {ret}");
+                    Console.WriteLine($"读取失败，错误码: {ret} {a}");
                 }
+
+                // 机械臂急停,需要注意值究竟是多少,要不要取多次数据融合？
+                if (distance != 0 && distance < 231)
+                {
+                    Task.Run(() =>
+                    {
+                        Arm.rm_set_arm_stop(Arm.Instance.robotHandlePtr);
+                    });
+                }
+                //\rm_get_current_arm_state(Arm.Instance.robotHandlePtr, ref state_1);
                 // 每隔1秒读取一次
                 Thread.Sleep(1000);
             }

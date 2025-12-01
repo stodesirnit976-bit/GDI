@@ -821,7 +821,7 @@
             // btn8080Connect
             // 
             this.btn8080Connect.Font = new System.Drawing.Font("宋体", 11F);
-            this.btn8080Connect.Location = new System.Drawing.Point(124, 826);
+            this.btn8080Connect.Location = new System.Drawing.Point(123, 826);
             this.btn8080Connect.Name = "btn8080Connect";
             this.btn8080Connect.Size = new System.Drawing.Size(111, 32);
             this.btn8080Connect.TabIndex = 0;

@@ -37,8 +37,7 @@ public class SocketClient
     // 连接功能
     public void Connect(string ip, int port)
     {
-        if (isConnected) return;
-
+        //if (isConnected) return;
         Task.Run(() =>
         {
             try

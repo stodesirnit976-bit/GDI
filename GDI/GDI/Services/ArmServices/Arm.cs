@@ -11,6 +11,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -299,19 +300,12 @@ namespace GDI.Services
         //    }
         //}
 
-        public static float[] c_ini = { 0, 94, -129.5f, 0, -62.4f, 0 };
+        public static float[] c_ini = { 0, 94, -129.5f, 0, -62.4f, 0 };     //wm修改
 
         // ==========================================
         private Arm()
         {
             robotHandlePtr = IntPtr.Zero;
-
-            //c_ini.position.x = 0;
-            //c_ini.position.y = 0;
-            //c_ini.position.z = 0.5f;
-            //c_ini.euler.rx = -3.14f;
-            //c_ini.euler.ry = (float)(-1.570f + Math.PI / 23);
-            //c_ini.euler.rz = 3.14f;
 
             paramsConfig.port = 1;     // 末端接口
             paramsConfig.device = 1;   // 传感器站号
@@ -319,70 +313,85 @@ namespace GDI.Services
             paramsConfig.num = 3;      // 读2个寄存器 (对应4个字节)
         }
 
+        
 
         private static int arm_Move(float len, float wid, float height, bool N_or_Z, int count, int vol)
         {
-            height += 0.26f;
+            len /= 1000;
+            wid /= 1000;
+            float dis = height;
+            height /= 1000;
+            height += 0.26f;  //0.2477
             int ret = 0;
             int r = 0;  // 交融半径
-            int trajectory_connect = 0; // 轨迹连接
-            int block = 1; // 阻塞
+            rm_pose_t c_1 = new();
+            rm_pose_t c_2 = new();
 
             rm_pose_t c2 = new();   // 运动位姿
-            c2.position.x = 0.05f;
-            c2.position.y = 0.25f;
+            c2.position.x = -0.1f;
+            c2.position.y = 0.05f;
             c2.position.z = height;
             c2.euler.rx = (float)Math.PI;
             c2.euler.ry = 0;
             c2.euler.rz = (float)Math.PI / 2;
 
             rm_pose_t c3 = new();   // 运动位姿
-            c3.position.x = 0.05f;
-            c3.position.y = 0.25f + len;
+            c3.position.x = -0.1f;
+            c3.position.y = 0.05f + len;
             c3.position.z = height;
             c3.euler.rx = (float)Math.PI;
             c3.euler.ry = 0;
             c3.euler.rz = (float)Math.PI / 2;
 
             rm_pose_t c4 = new();   // 运动位姿
-            c4.position.x = 0.05f;
+            c4.position.x = wid;
             c4.position.y = 0.05f;
             c4.position.z = height;
             c4.euler.rx = (float)Math.PI;
             c4.euler.ry = 0;
-            c4.euler.rz = -(float)Math.PI / 2;
+            c4.euler.rz = (float)Math.PI;
 
             rm_pose_t c5 = new();   // 运动位姿
-            c5.position.x = 0.05f + wid;
+            c5.position.x = 0;
             c5.position.y = 0.05f;
             c5.position.z = height;
             c5.euler.rx = (float)Math.PI;
             c5.euler.ry = 0;
-            c5.euler.rz = -(float)Math.PI / 2;
+            c5.euler.rz = (float)Math.PI;
 
-            rm_movej_p(Arm.Instance.robotHandlePtr, N_or_Z ? c4 : c2, 20, r, 1, 0);
+            if (N_or_Z) { c_1 = c4; c_2 = c5; }
+            else { c_1 = c2; c_2 = c3; }
+
+            DateTime startTime = DateTime.Now;
+
+            rm_movej_p(Arm.Instance.robotHandlePtr, c_1, 15, r, 1, 1);
             for (int i = 0; i < count; i++)
             {
-                rm_movel(Arm.Instance.robotHandlePtr, N_or_Z ? c4 : c2, vol, r, 1, 0);
+                rm_movel(Arm.Instance.robotHandlePtr, c_1, vol, r, 1, 1);
 
-                if (i == count) { trajectory_connect = 0; block = 1; }
-                rm_movel(Arm.Instance.robotHandlePtr, N_or_Z ? c5 : c3, vol, r, trajectory_connect, block);
+                //print();  // 触发喷印
+                //Thread.Sleep(2800); //
+                
+                rm_movel(Arm.Instance.robotHandlePtr, c_2, vol, r, 1, 1);
 
+                double runTime =  (DateTime.Now - startTime).TotalMilliseconds;
+                Console.WriteLine($"第{i + 1}层完成。 移动长度：{len}mm  ||  移动时间: {runTime} ms");
                 if (!N_or_Z)
                 {
-                    c2.position.x += wid;
-                    c3.position.x += wid;
+                    c_1.position.x += wid;
+                    c_2.position.x += wid;
                 }
                 else
                 {
-                    c4.position.y += len;
-                    c5.position.y += len;
+                    c_1.position.y += len;
+                    c_2.position.y += len;
                 }
             }
 
             rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
-            rm_movej(Arm.Instance.robotHandlePtr, c_ini, 20, 0, 0, 1);
+            rm_movej(Arm.Instance.robotHandlePtr, c_ini, 20, 0, 0, 0);
             rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
+
             return ret;
         }
 
@@ -399,10 +408,10 @@ namespace GDI.Services
             int ret = rm_movej(Arm.Instance.robotHandlePtr, c_ini, 20, 0, 0, 1);
             if (ret != 0) MessageBox.Show("[rm_move_joint] Error occurred: " + ret);
 
-            if (Arm.Instance.robotHandlePtr != IntPtr.Zero && robotHandle.id > 0)
-                MessageBox.Show("Arm Init Success!");
-            else
-                MessageBox.Show("[rm_create_robot_arm] connect error:" + robotHandle.id);
+            //if (Arm.Instance.robotHandlePtr != IntPtr.Zero && robotHandle.id > 0)
+            //    MessageBox.Show("Arm Init Success!");
+            //else
+            //    MessageBox.Show("[rm_create_robot_arm] connect error:" + robotHandle.id);
         }
 
 
@@ -415,7 +424,12 @@ namespace GDI.Services
             int ret = arm_Move(len, wid, height, N, count, vol);
         }
 
-
+        private static void print()
+        {
+            int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
+            Thread.Sleep(60); // 保持100ms
+            int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
+        }
 
 
 

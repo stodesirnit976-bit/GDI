@@ -73,6 +73,7 @@
             this.label18 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_test = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -101,16 +102,16 @@
             this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox4.Size = new System.Drawing.Size(613, 386);
+            this.groupBox4.Size = new System.Drawing.Size(883, 577);
             this.groupBox4.TabIndex = 36;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "深度相机";
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(14, 19);
+            this.panel1.Location = new System.Drawing.Point(111, 19);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(583, 350);
+            this.panel1.Size = new System.Drawing.Size(758, 546);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
@@ -481,11 +482,11 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.pictureBox_Preview);
-            this.groupBox1.Location = new System.Drawing.Point(670, 439);
+            this.groupBox1.Location = new System.Drawing.Point(697, 641);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(613, 240);
+            this.groupBox1.Size = new System.Drawing.Size(612, 254);
             this.groupBox1.TabIndex = 38;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "喷印预览";
@@ -577,20 +578,31 @@
             // 
             // btn_test
             // 
-            this.btn_test.Location = new System.Drawing.Point(28, 47);
+            this.btn_test.Location = new System.Drawing.Point(28, 11);
             this.btn_test.Margin = new System.Windows.Forms.Padding(2);
             this.btn_test.Name = "btn_test";
             this.btn_test.Size = new System.Drawing.Size(222, 58);
             this.btn_test.TabIndex = 0;
-            this.btn_test.Text = "测试";
+            this.btn_test.Text = "io高电平";
             this.btn_test.UseVisualStyleBackColor = true;
             this.btn_test.Click += new System.EventHandler(this.btn_test_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(28, 84);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(222, 58);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "io低电平";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btn_test2_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1304, 709);
+            this.ClientSize = new System.Drawing.Size(699, 754);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btn_Generate);
@@ -599,6 +611,7 @@
             this.Controls.Add(this.btn_SysInit);
             this.Controls.Add(this.btn_Wrok);
             this.Controls.Add(this.btn_EStop);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_test);
             this.Controls.Add(this.btn_Detail);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -668,5 +681,6 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btn_test;
+        private System.Windows.Forms.Button button1;
     }
 }

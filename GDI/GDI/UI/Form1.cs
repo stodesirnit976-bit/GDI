@@ -104,7 +104,7 @@ namespace GDI
         // ----------- 开启socket -----------
         public void socket9837_Connect()
         {
-            socket_Init();
+            socket9837_Init();
             
             client9837.Connect(ip, 9837); // 连控制口
 
@@ -112,8 +112,7 @@ namespace GDI
         }
         public void socket8080_Connect()
         {
-            btn9837Connect.Enabled = false;
-
+            socket8080_Init();
             client8080.Connect(ip, 8080); // 连数据口
 
             Console.WriteLine("已调用form的socket连接");
@@ -145,13 +144,15 @@ namespace GDI
         // ================= 对内接口：给MainForm/Form用 ==================
 
         // ----------- 初始化socket -----------
-        private void socket_Init()
+        private void socket9837_Init()
         {
             // --- 设置 9837 (控制口) ---
             client9837 = new SocketClient();
             client9837.MsgFunc = Show9837;
             client9837.changeBtn = socketServer_closed;
-
+        }
+        private void socket8080_Init()
+        {
             // --- 设置 8080 (数据口) ---
             client8080 = new SocketClient();
             client8080.MsgFunc = Show8080;

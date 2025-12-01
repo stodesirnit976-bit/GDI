@@ -66,6 +66,8 @@ namespace GDI
 
             // 图像的combobox导入
             PictureListLoader.Load(loadPath, comboBox_filePicture);
+
+           
         }
 
         // ----------- 窗口关闭事件：关闭服务 ------------
@@ -100,17 +102,44 @@ namespace GDI
 
 
 
+        // ===================================================================================================
+        // =========================================== TEST ==================================================
+        // ===================================================================================================
         private void btn_test_Click(object sender, EventArgs e)
         {
             if (detailForm == null || detailForm.IsDisposed)
             {
-                detailForm = new Form1();
+                detailForm = new Form1();    
             }
-            detailForm.arm_Init();
-            arm_Start();
+
+            int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
+            Thread.Sleep(100);
+            int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
+            Console.WriteLine($"2号口设置为输出模式高电平{a}");
+        }
+        private void btn_test2_Click(object sender, EventArgs e)
+        {
+            if (detailForm == null || detailForm.IsDisposed)
+            {
+                detailForm = new Form1();
+
+
+            
+            }
+            
+            int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
+            Thread.Sleep(1);
+            //int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
+
+            Console.WriteLine($"2号口设置为输出模式低电平{b}");
+                   
+            
         }
 
-
+        private void btn_Wrok_Click(object sender, EventArgs e)
+        {
+            arm_Start();
+        }
 
 
         // ===================================================================================================
@@ -140,24 +169,31 @@ namespace GDI
                 var handle = detailForm.Handle; // 强制创建句柄
             }
 
+            
+            // 初始化机械臂并恢复初始化姿态
+            int ret = detailForm.arm_Init();
+
+            // 机械臂IO控制器初始化
+            Arm.rm_set_voltage(Arm.Instance.robotHandlePtr, 3);
+            Arm.rm_set_IO_mode(Arm.Instance.robotHandlePtr, 1, 1);// 设置为通用输出模式,初始化为低电平
+            int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
+
+            //Console.WriteLine($"2号口设置为输出模式低电平{a}");
+            
             // 启动socket服务
             // 默认初始化只连接9837端口，8080靠9837发送命令启动/关闭
             detailForm.socket9837_Connect();
-            
+            detailForm.socket8080_Connect();
             // 启动激光测距传感器
             detailForm.laser_Start();
-
-            // 初始化机械臂并恢复初始化姿态
-            int ret = detailForm.arm_Init();
-            
             // 等待机械臂初始化完成
-            // 启动相机服务
+            // 启动相机服务并标定
             if (ret == 6)
-                cam_Start();  
+                cam_Start();
 
         }
 
-        
+
 
 
         // ===================================================================================================
@@ -254,7 +290,7 @@ namespace GDI
             detailForm.socket9837_Send("@StartPrint@");
 
             detailForm.socket8080_Connect();
-
+            
             // 机械臂启动
             arm_Start();
 
@@ -333,13 +369,14 @@ namespace GDI
         // -------- 相机启动 --------
         private void cam_Start()
         {
-            cam.cam_Thread_start();
-         
+            cam.cam_Thread_start();       
             // 订阅相机事件，进行标定
             calib.Calibration_subCamEvent(cam);
-
             // 订阅相机事件，获取画面
             cam.cam_Event += panel_Update;
+
+            Thread.Sleep(25000);                       //wm修改
+            calib.Calibration2_subCamEvent(cam);      //wm修改
         }
         // -------- 相机关闭 --------
         private void cam_stop()
@@ -350,8 +387,8 @@ namespace GDI
         // -------- 委托回调更新相机画面 --------
         private void panel_Update(Bitmap color, Bitmap depth, DepthFrame a, Intrinsics b)
         {
-            Bitmap colorCopy = (Bitmap)color.Clone();
-            Bitmap depthCopy = (Bitmap)depth.Clone();
+            Bitmap colorCopy = new Bitmap(color);
+            Bitmap depthCopy = new Bitmap(depth);
             this.BeginInvoke(new Action(() =>
             {
                 imagecolor?.Dispose();
@@ -399,7 +436,10 @@ namespace GDI
             var p = GetArmParams.Params(sliceSavePath, tbx_UVheight.Text, rbt_N.Checked);
 
             if (p == null)
+            {
+                MessageBox.Show("请输入机械臂工作高度！");
                 return;
+            }
             else
                 Console.WriteLine($"机械臂运动参数获取成功：len={p.Len}, wid={p.Wid}, height={p.Height}, N={p.N}, count={p.Count}, vol={p.Vol}");
 
@@ -421,10 +461,7 @@ namespace GDI
 
 
 
-        private void btn_Wrok_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         
     }
