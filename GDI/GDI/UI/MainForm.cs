@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace GDI
 {
@@ -37,6 +38,8 @@ namespace GDI
         List<Template> templates;//结构模版的列表
         private TextRender TextRender = new TextRender();
 
+
+        
         public MainForm()
         {
             InitializeComponent();
@@ -97,6 +100,18 @@ namespace GDI
 
 
 
+        private void btn_test_Click(object sender, EventArgs e)
+        {
+            if (detailForm == null || detailForm.IsDisposed)
+            {
+                detailForm = new Form1();
+            }
+            detailForm.arm_Init();
+            arm_Start();
+        }
+
+
+
 
         // ===================================================================================================
         // =========================================== 后台详情 ==============================================
@@ -137,8 +152,8 @@ namespace GDI
             
             // 等待机械臂初始化完成
             // 启动相机服务
-            //if (ret == 6)
-                //cam_Start();  
+            if (ret == 6)
+                cam_Start();  
 
         }
 
@@ -176,7 +191,7 @@ namespace GDI
 
                 // 获取按键是否旋转
                 //bool _Rotate = checkBox_Rotate.Checked;
-                bool _Rotate = radioButton_v.Checked;
+                bool _Rotate = rbt_N.Checked;
                 // 获取选择的模版选项
                 Template tpl = (Template)comboBoxTemplate.SelectedItem;
 
@@ -241,10 +256,14 @@ namespace GDI
             detailForm.socket8080_Connect();
 
             // 机械臂启动
-            detailForm.arm_Start();
+            arm_Start();
 
-            // 怎么确定喷印结束？阻塞？不好急停不靠谱，
-            detailForm.socket9837_Send("@StopPrint@");
+            // 怎么确定喷印结束？阻塞？不好急停不靠谱；有没有类似信号量任务通知的机制？autoreseevent
+            while (true)
+            {
+                SyncOjbects.armFinsh.WaitOne();
+                detailForm.socket9837_Send("@StopPrint@");
+            }            
         }
 
 
@@ -366,6 +385,45 @@ namespace GDI
                 g.DrawImage(imagedepth, rect, 0, 0, imagedepth.Width, imagedepth.Height,
                     GraphicsUnit.Pixel, ia);
             }
+        }
+
+
+
+        // ===================================================================================================
+        // ========================================= 机械臂启动 ==============================================
+        // ===================================================================================================
+
+        // -------- 机械臂启动 --------
+        public async void arm_Start()
+        {
+            var p = GetArmParams.Params(sliceSavePath, tbx_UVheight.Text, rbt_N.Checked);
+
+            if (p == null)
+                return;
+            else
+                Console.WriteLine($"机械臂运动参数获取成功：len={p.Len}, wid={p.Wid}, height={p.Height}, N={p.N}, count={p.Count}, vol={p.Vol}");
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    // 机械臂执行操作
+                    //Arm.Instance.move(p.Len+10, p.Wid, p.Height, p.N, p.Count, p.Vol);///////////这里长度加了10mm抵消延迟机械臂移动距离不够
+                    Console.WriteLine("机械臂开始运行");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("机械臂启动失败: " + ex.Message);
+                }
+            });
+            SyncOjbects.armFinsh.Set(); // 机械臂运行结束信号
+        }
+
+
+
+        private void btn_Wrok_Click(object sender, EventArgs e)
+        {
+
         }
 
         

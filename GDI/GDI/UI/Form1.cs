@@ -287,60 +287,7 @@ namespace GDI
             });
         }
 
-        // -------- 机械臂启动 --------
-        public async void arm_Start()
-        {
-            btn_start.Enabled = false;
-            if (string.IsNullOrEmpty(tbx_Height.Text))
-            {
-                MessageBox.Show("请输入高度参数！");
-                return;
-            }
-
-            // 以下的策略是只需要手动设置速度、NorZ、高度三个参数
-            // 长宽直接取自文件夹文件数值
-            // 直接读取 sliceImage 发送文件夹里第一张图片的尺寸
-            var firstFile = Directory.EnumerateFiles(sliceSavePath, "*.bmp")
-                         .FirstOrDefault();
-            if (firstFile == null)
-            {
-                MessageBox.Show("文件夹里没找到 .bmp 文件");
-                return;
-            }
-            using var img = Image.FromFile(firstFile);
-
-            float tran = (float)54.36 / 1280; // 1 pixel = tran 米 1p = tran*1000 mm
-            float len = (float)img.Width * tran;
-            float wid = (float)img.Height * tran;
-
-            // 假定激光传感器和机械臂末端平齐
-            // 假设有一个函数 ArmHeight(work_h) 设定作业平面，得把这个函数加入 Arm.test的形参中，
-            // 设定作业距离为 5mm ，也就是 _distance = 5,
-            // 即 if(_distance =< 5) 
-            // 机械臂末端离平面高度，单位 m
-            float height = float.Parse(tbx_Height.Text);
-
-            // n走线或z走线
-            bool N = radioButton_N.Checked;
-            // 走线次数
-            int count = Directory.EnumerateFiles(sliceSavePath, "*.bmp").Count();
-            // 速度
-            int vol = int.Parse(label_speed.Text);
-
-            await Task.Run(() =>
-            {
-                try
-                {
-                    // 启动机械臂
-                    Arm.Instance.move(len + 10, wid, height, N, count, vol);///////////这里长度加了10mm抵消延迟机械臂移动距离不够
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("机械臂启动失败: " + ex.Message);
-                }
-            });
-            btn_start.Enabled = true;
-        }
+        
 
 
         // =============== 对内接口：给form用 ===============

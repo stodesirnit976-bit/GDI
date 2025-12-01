@@ -299,7 +299,7 @@ namespace GDI.Services
         //    }
         //}
 
-        public static float[] c_ini;
+        public static float[] c_ini = { 0, 94, -129.5f, 0, -62.4f, 0 };
 
         // ==========================================
         private Arm()
@@ -317,14 +317,6 @@ namespace GDI.Services
             paramsConfig.device = 1;   // 传感器站号
             paramsConfig.address = 0;  // 起始地址
             paramsConfig.num = 3;      // 读2个寄存器 (对应4个字节)
-
-            c_ini[0] = 0;
-            c_ini[1] = 94;
-            c_ini[2] = -129.5f;
-            c_ini[3] = 0;
-            c_ini[4] = -62.4f;
-            c_ini[5] = 0;
-
         }
 
 

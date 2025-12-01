@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ArmParams.cs" />
     <Compile Include="Services\ArmServices\TransformCalculator.cs" />
     <Compile Include="Core\PictureListLoader.cs" />
     <Compile Include="Core\ImageProcessor.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Program.cs" />
+    <Compile Include="Models\SyncOjbects.cs" />
     <Compile Include="Models\StateReader.cs" />
     <Compile Include="Services\ArmServices\Arm.cs" />
     <Compile Include="Services\LaserSensor.cs" />
