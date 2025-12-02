@@ -372,12 +372,14 @@ namespace GDI
             int count = int.Parse(textBox_H_count.Text);
             // 速度
             int vol = int.Parse(label_H_speed.Text);
+            // 是否开启喷印
+            bool on = rbt_H_PrintON.Checked;
 
             // 启动机械臂
             await Task.Run(() =>
             {
                 // 启动机械臂
-                Arm.Instance.move(len, wid, height, N, count, vol);
+                Arm.Instance.move(len, wid, height, N, count, vol, on);
             });
 
             btn_H_start.Enabled = true;

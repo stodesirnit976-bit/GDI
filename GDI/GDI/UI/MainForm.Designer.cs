@@ -48,8 +48,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_length = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.rbt_Z = new System.Windows.Forms.RadioButton();
-            this.rbt_N = new System.Windows.Forms.RadioButton();
+            this.rbt_ON = new System.Windows.Forms.RadioButton();
+            this.rbt_OFF = new System.Windows.Forms.RadioButton();
             this.comboBoxTemplate = new System.Windows.Forms.ComboBox();
             this.textBox_volume = new System.Windows.Forms.TextBox();
             this.textBox_tareWeight = new System.Windows.Forms.TextBox();
@@ -78,6 +78,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.btn_movetodot = new System.Windows.Forms.Button();
             this.btn_backtostart = new System.Windows.Forms.Button();
+            this.rbt_PfintOFF = new System.Windows.Forms.RadioButton();
+            this.rbt_PrintON = new System.Windows.Forms.RadioButton();
             this.groupBox4.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -158,11 +160,11 @@
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.textBox_length);
             this.tabPage1.Controls.Add(this.label10);
-            this.tabPage1.Controls.Add(this.rbt_Z);
-            this.tabPage1.Controls.Add(this.rbt_N);
             this.tabPage1.Controls.Add(this.comboBoxTemplate);
+            this.tabPage1.Controls.Add(this.rbt_ON);
             this.tabPage1.Controls.Add(this.textBox_volume);
             this.tabPage1.Controls.Add(this.textBox_tareWeight);
+            this.tabPage1.Controls.Add(this.rbt_OFF);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.textBox_payLoad);
             this.tabPage1.Controls.Add(this.label3);
@@ -318,30 +320,30 @@
             this.label10.TabIndex = 23;
             this.label10.Text = "长：";
             // 
-            // rbt_Z
+            // rbt_ON
             // 
-            this.rbt_Z.AutoSize = true;
-            this.rbt_Z.Checked = true;
-            this.rbt_Z.Location = new System.Drawing.Point(158, 453);
-            this.rbt_Z.Margin = new System.Windows.Forms.Padding(2);
-            this.rbt_Z.Name = "rbt_Z";
-            this.rbt_Z.Size = new System.Drawing.Size(47, 16);
-            this.rbt_Z.TabIndex = 8;
-            this.rbt_Z.TabStop = true;
-            this.rbt_Z.Text = "横版";
-            this.rbt_Z.UseVisualStyleBackColor = true;
+            this.rbt_ON.AutoSize = true;
+            this.rbt_ON.Checked = true;
+            this.rbt_ON.Location = new System.Drawing.Point(149, 450);
+            this.rbt_ON.Margin = new System.Windows.Forms.Padding(2);
+            this.rbt_ON.Name = "rbt_ON";
+            this.rbt_ON.Size = new System.Drawing.Size(47, 16);
+            this.rbt_ON.TabIndex = 8;
+            this.rbt_ON.TabStop = true;
+            this.rbt_ON.Text = "横版";
+            this.rbt_ON.UseVisualStyleBackColor = true;
             // 
-            // rbt_N
+            // rbt_OFF
             // 
-            this.rbt_N.AutoSize = true;
-            this.rbt_N.Location = new System.Drawing.Point(219, 453);
-            this.rbt_N.Margin = new System.Windows.Forms.Padding(2);
-            this.rbt_N.Name = "rbt_N";
-            this.rbt_N.Size = new System.Drawing.Size(47, 16);
-            this.rbt_N.TabIndex = 8;
-            this.rbt_N.TabStop = true;
-            this.rbt_N.Text = "竖版";
-            this.rbt_N.UseVisualStyleBackColor = true;
+            this.rbt_OFF.AutoSize = true;
+            this.rbt_OFF.Location = new System.Drawing.Point(210, 450);
+            this.rbt_OFF.Margin = new System.Windows.Forms.Padding(2);
+            this.rbt_OFF.Name = "rbt_OFF";
+            this.rbt_OFF.Size = new System.Drawing.Size(47, 16);
+            this.rbt_OFF.TabIndex = 8;
+            this.rbt_OFF.TabStop = true;
+            this.rbt_OFF.Text = "竖版";
+            this.rbt_OFF.UseVisualStyleBackColor = true;
             // 
             // comboBoxTemplate
             // 
@@ -506,7 +508,7 @@
             // 
             // btn_EStop
             // 
-            this.btn_EStop.Location = new System.Drawing.Point(28, 607);
+            this.btn_EStop.Location = new System.Drawing.Point(28, 547);
             this.btn_EStop.Margin = new System.Windows.Forms.Padding(2);
             this.btn_EStop.Name = "btn_EStop";
             this.btn_EStop.Size = new System.Drawing.Size(222, 58);
@@ -517,7 +519,7 @@
             // 
             // btn_Wrok
             // 
-            this.btn_Wrok.Location = new System.Drawing.Point(28, 506);
+            this.btn_Wrok.Location = new System.Drawing.Point(28, 475);
             this.btn_Wrok.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Wrok.Name = "btn_Wrok";
             this.btn_Wrok.Size = new System.Drawing.Size(222, 58);
@@ -609,7 +611,7 @@
             this.btn_calibration.Name = "btn_calibration";
             this.btn_calibration.Size = new System.Drawing.Size(136, 43);
             this.btn_calibration.TabIndex = 0;
-            this.btn_calibration.Text = "标定";
+            this.btn_calibration.Text = "喷印触发状态";
             this.btn_calibration.UseVisualStyleBackColor = true;
             this.btn_calibration.Click += new System.EventHandler(this.btn_calibration_Click);
             // 
@@ -646,6 +648,31 @@
             this.btn_backtostart.UseVisualStyleBackColor = true;
             this.btn_backtostart.Click += new System.EventHandler(this.btn_backtostart_Click);
             // 
+            // rbt_PfintOFF
+            // 
+            this.rbt_PfintOFF.AutoSize = true;
+            this.rbt_PfintOFF.Location = new System.Drawing.Point(135, 635);
+            this.rbt_PfintOFF.Margin = new System.Windows.Forms.Padding(2);
+            this.rbt_PfintOFF.Name = "rbt_PfintOFF";
+            this.rbt_PfintOFF.Size = new System.Drawing.Size(95, 16);
+            this.rbt_PfintOFF.TabIndex = 8;
+            this.rbt_PfintOFF.TabStop = true;
+            this.rbt_PfintOFF.Text = "关闭喷印触发";
+            this.rbt_PfintOFF.UseVisualStyleBackColor = true;
+            // 
+            // rbt_PrintON
+            // 
+            this.rbt_PrintON.AutoSize = true;
+            this.rbt_PrintON.Checked = true;
+            this.rbt_PrintON.Location = new System.Drawing.Point(36, 635);
+            this.rbt_PrintON.Margin = new System.Windows.Forms.Padding(2);
+            this.rbt_PrintON.Name = "rbt_PrintON";
+            this.rbt_PrintON.Size = new System.Drawing.Size(95, 16);
+            this.rbt_PrintON.TabIndex = 8;
+            this.rbt_PrintON.TabStop = true;
+            this.rbt_PrintON.Text = "开启喷印触发";
+            this.rbt_PrintON.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -665,7 +692,9 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.btn_calibration);
             this.Controls.Add(this.btn_test);
+            this.Controls.Add(this.rbt_PrintON);
             this.Controls.Add(this.btn_Detail);
+            this.Controls.Add(this.rbt_PfintOFF);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainForm";
             this.Text = "MainForm";
@@ -683,6 +712,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -708,8 +738,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_length;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.RadioButton rbt_Z;
-        private System.Windows.Forms.RadioButton rbt_N;
+        private System.Windows.Forms.RadioButton rbt_ON;
+        private System.Windows.Forms.RadioButton rbt_OFF;
         private System.Windows.Forms.ComboBox comboBoxTemplate;
         private System.Windows.Forms.TextBox textBox_volume;
         private System.Windows.Forms.TextBox textBox_tareWeight;
@@ -738,5 +768,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button btn_movetodot;
         private System.Windows.Forms.Button btn_backtostart;
+        private System.Windows.Forms.RadioButton rbt_PfintOFF;
+        private System.Windows.Forms.RadioButton rbt_PrintON;
     }
 }

@@ -315,7 +315,7 @@ namespace GDI.Services
 
         
 
-        private static int arm_Move(float len, float wid, float height, bool N_or_Z, int count, int vol)
+        private static int arm_Move(float len, float wid, float height, bool N_or_Z, int count, int vol, bool on)
         {
             len /= 1000;
             wid /= 1000;
@@ -328,7 +328,7 @@ namespace GDI.Services
             rm_pose_t c_2 = new();
 
             rm_pose_t c2 = new();   // 运动位姿
-            c2.position.x = -0.1f;
+            c2.position.x = 0;
             c2.position.y = 0.05f;
             c2.position.z = height;
             c2.euler.rx = (float)Math.PI;
@@ -336,7 +336,7 @@ namespace GDI.Services
             c2.euler.rz = (float)Math.PI / 2;
 
             rm_pose_t c3 = new();   // 运动位姿
-            c3.position.x = -0.1f;
+            c3.position.x = 0;
             c3.position.y = 0.05f + len;
             c3.position.z = height;
             c3.euler.rx = (float)Math.PI;
@@ -364,18 +364,21 @@ namespace GDI.Services
 
             DateTime startTime = DateTime.Now;
 
-            rm_movej_p(Arm.Instance.robotHandlePtr, c_1, 15, r, 1, 1);
+            rm_movej_p(Arm.Instance.robotHandlePtr, c_1, 15, r, 0, 1);
+            //print();  // 触发喷印
+            //Thread.Sleep(2800); //
             for (int i = 0; i < count; i++)
             {
-                rm_movel(Arm.Instance.robotHandlePtr, c_1, vol, r, 1, 1);
+                rm_movel(Arm.Instance.robotHandlePtr, c_1, vol, r, 0, 1);
 
-                print();  // 触发喷印
-                Thread.Sleep(2800); //
+                print(on);  // 触发喷印
+                Console.WriteLine($"第{i + 1}层完成。 移动长度：{len}mm  ||  移动时间:  ms");
 
-                rm_movel(Arm.Instance.robotHandlePtr, c_2, vol, r, 1, 1);
+                 //
+
+                rm_movel(Arm.Instance.robotHandlePtr, c_2, vol, r, 0, 1);
 
                 double runTime =  (DateTime.Now - startTime).TotalMilliseconds;
-                Console.WriteLine($"第{i + 1}层完成。 移动长度：{len}mm  ||  移动时间: {runTime} ms");
                 if (!N_or_Z)
                 {
                     c_1.position.x += wid;
@@ -416,19 +419,27 @@ namespace GDI.Services
 
 
 
-        public void move(float len, float wid, float height, bool N, int count, int vol)
+        public void move(float len, float wid, float height, bool N, int count, int vol, bool on)
         {
             // 调用C语言睿尔曼机械臂开发包动态库中的 rm_init 函数  
             // 初始化为三线程模式这
             //int ret = Demo_Move_Cmd(Arm.Instance.robotHandlePtr, 0.08f, 0.02f, 0.075f, 0, 2, 20);
-            int ret = arm_Move(len, wid, height, N, count, vol);
+            int ret = arm_Move(len, wid, height, N, count, vol, on);
         }
 
-        private static void print()
+        private static void print(bool ON)
         {
-            int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
-            Thread.Sleep(60); // 保持100ms
-            int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
+            if (ON)
+            {
+                int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
+                Thread.Sleep(60); // 保持100ms
+                int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
+                Thread.Sleep(2800);
+            }
+            else
+            {
+
+            }
         }
 
 

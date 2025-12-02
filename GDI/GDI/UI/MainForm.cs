@@ -142,16 +142,16 @@ namespace GDI
         }
         private void btn_calibration_Click(object sender, EventArgs e)
         {
-            calib.Calibration2_subCamEvent(cam);
+            
             
         }
         private void btn_movetodot_Click(object sender, EventArgs e)
         {
-            calib.Calibration_subCamEvent(cam);
+            
         }
         private void btn_backtostart_Click(object sender, EventArgs e)
         {
-            calib.backToStart();
+            //calib.backToStart();
         }
         // ===================================================================================================
         // =========================================== 后台详情 ==============================================
@@ -185,16 +185,16 @@ namespace GDI
             int ret = detailForm.arm_Init();
 
             // 机械臂IO控制器初始化
-            //Arm.rm_set_voltage(Arm.Instance.robotHandlePtr, 3);
-            //Arm.rm_set_IO_mode(Arm.Instance.robotHandlePtr, 1, 1);// 设置为通用输出模式,初始化为低电平
-            //int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
+            Arm.rm_set_voltage(Arm.Instance.robotHandlePtr, 3);
+            Arm.rm_set_IO_mode(Arm.Instance.robotHandlePtr, 1, 1);// 设置为通用输出模式,初始化为低电平
+            int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
 
             //Console.WriteLine($"2号口设置为输出模式低电平{a}");
 
             // 启动socket服务
             // 默认初始化只连接9837端口，8080靠9837发送命令启动/关闭
-            //detailForm.socket9837_Connect();
-            //detailForm.socket8080_Connect();
+            detailForm.socket9837_Connect();
+            detailForm.socket8080_Connect();
             // 启动激光测距传感器
             detailForm.laser_Start();
             // 等待机械臂初始化完成
@@ -238,7 +238,7 @@ namespace GDI
 
                 // 获取按键是否旋转
                 //bool _Rotate = checkBox_Rotate.Checked;
-                bool _Rotate = rbt_N.Checked;
+                bool _Rotate = rbt_OFF.Checked;
                 // 获取选择的模版选项
                 Template tpl = (Template)comboBoxTemplate.SelectedItem;
 
@@ -382,12 +382,12 @@ namespace GDI
         {
             cam.cam_Thread_start();
             // 订阅相机事件，进行标定
-            //calib.Calibration_subCamEvent(cam);
+            calib.Calibration_subCamEvent(cam);
             // 订阅相机事件，获取画面
             cam.cam_Event += panel_Update;
 
-            //Thread.Sleep(25000);                       //wm修改
-            //calib.Calibration2_subCamEvent(cam);      //wm修改
+            Thread.Sleep(20000);                       //wm修改
+            calib.Calibration2_subCamEvent(cam);      //wm修改
         }
         // -------- 相机关闭 --------
         private void cam_stop()
@@ -444,7 +444,7 @@ namespace GDI
         // -------- 机械臂启动 --------
         public async void arm_Start()
         {
-            var p = GetArmParams.Params(sliceSavePath, tbx_UVheight.Text, rbt_N.Checked);
+            var p = GetArmParams.Params(sliceSavePath, tbx_UVheight.Text, rbt_OFF.Checked, rbt_PrintON.Checked);
 
             if (p == null)
             {
@@ -452,14 +452,14 @@ namespace GDI
                 return;
             }
             else
-                Console.WriteLine($"机械臂运动参数获取成功：len={p.Len}, wid={p.Wid}, height={p.Height}, N={p.N}, count={p.Count}, vol={p.Vol}");
+                Console.WriteLine($"机械臂运动参数获取成功：len={p.Len}, wid={p.Wid}, height={p.Height}, N={p.N}, count={p.Count}, vol={p.Vol}, Print={p.ON}");
 
             await Task.Run(() =>
             {
                 try
                 {
                     // 机械臂执行操作
-                    Arm.Instance.move(p.Len, p.Wid, p.Height, p.N, p.Count, p.Vol);///////////这里长度加了10mm抵消延迟机械臂移动距离不够
+                    Arm.Instance.move(p.Len, p.Wid, p.Height, p.N, p.Count, p.Vol, p.ON);///////////这里长度加了10mm抵消延迟机械臂移动距离不够
                     Console.WriteLine("机械臂开始运行");
                 }
                 catch (Exception ex)

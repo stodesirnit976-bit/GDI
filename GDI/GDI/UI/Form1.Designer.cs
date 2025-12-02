@@ -97,6 +97,8 @@
             this.label27 = new System.Windows.Forms.Label();
             this.comboBox_ip = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
+            this.rbt_H_PrintOFF = new System.Windows.Forms.RadioButton();
+            this.rbt_H_PrintON = new System.Windows.Forms.RadioButton();
             this.groupBox2.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -290,7 +292,9 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.rbt_H_PrintON);
             this.tabPage4.Controls.Add(this.radioButton_H_Z);
+            this.tabPage4.Controls.Add(this.rbt_H_PrintOFF);
             this.tabPage4.Controls.Add(this.radioButton_H_N);
             this.tabPage4.Controls.Add(this.textBox_H_count);
             this.tabPage4.Controls.Add(this.textBox_H_wid);
@@ -882,6 +886,28 @@
             this.label22.TabIndex = 6;
             this.label22.Text = "IP";
             // 
+            // rbt_H_PrintOFF
+            // 
+            this.rbt_H_PrintOFF.AutoSize = true;
+            this.rbt_H_PrintOFF.Location = new System.Drawing.Point(326, 177);
+            this.rbt_H_PrintOFF.Name = "rbt_H_PrintOFF";
+            this.rbt_H_PrintOFF.Size = new System.Drawing.Size(95, 16);
+            this.rbt_H_PrintOFF.TabIndex = 24;
+            this.rbt_H_PrintOFF.Text = "喷印触发关闭";
+            this.rbt_H_PrintOFF.UseVisualStyleBackColor = true;
+            // 
+            // rbt_H_PrintON
+            // 
+            this.rbt_H_PrintON.AutoSize = true;
+            this.rbt_H_PrintON.Checked = true;
+            this.rbt_H_PrintON.Location = new System.Drawing.Point(212, 177);
+            this.rbt_H_PrintON.Name = "rbt_H_PrintON";
+            this.rbt_H_PrintON.Size = new System.Drawing.Size(95, 16);
+            this.rbt_H_PrintON.TabIndex = 25;
+            this.rbt_H_PrintON.TabStop = true;
+            this.rbt_H_PrintON.Text = "喷印触发开启";
+            this.rbt_H_PrintON.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -990,6 +1016,8 @@
         private System.Windows.Forms.ComboBox comboBox_ip;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Button btn8080Connect;
+        private System.Windows.Forms.RadioButton rbt_H_PrintON;
+        private System.Windows.Forms.RadioButton rbt_H_PrintOFF;
     }
 }
 

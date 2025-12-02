@@ -18,11 +18,12 @@ namespace GDI.Models
         public bool N { get; set; }
         public int Count { get; set; }
         public int Vol { get; set; }
+        public bool ON { get; set; }
     }
 
     public class GetArmParams
     {
-        public static ArmParams Params(string sliceSavePath, string heightText, bool N)
+        public static ArmParams Params(string sliceSavePath, string heightText, bool N, bool on)
         {
             if (string.IsNullOrEmpty(heightText))
             {
@@ -57,6 +58,7 @@ namespace GDI.Models
                 N = N,
                 Count = count,
                 Vol = vol,
+                ON = on,
             };
            
         }
