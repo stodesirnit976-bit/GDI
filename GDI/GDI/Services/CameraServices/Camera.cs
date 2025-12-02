@@ -26,7 +26,8 @@ namespace GDI.Services
         // 对外输出一帧图像的事件
         public event Action<Bitmap, Bitmap, DepthFrame,Intrinsics> cam_Event;
         PipelineProfile pp;
-        private void cam_Thread(CancellationToken token)
+        
+       private void cam_Thread(CancellationToken token)
         {
             var cfg = new Config();
             pipe = new Pipeline();
@@ -56,11 +57,25 @@ namespace GDI.Services
                                     .Where(p => p.Stream == Intel.RealSense.Stream.Color)
                                     .OrderBy(p => p.Framerate)
                                     .Select(p => p.As<VideoStreamProfile>()).First();
-    
+
+                var sensor = dev.QuerySensors()[0];
+
+                // 设置高精度
+                if (sensor.Options.Supports(Option.VisualPreset))
+                {
+                    try { sensor.Options[Option.VisualPreset].Value = 3f; } catch { }
+                }
+
+                if (colorSensor.Options.Supports(Option.AutoExposurePriority))
+                {
+                    try { colorSensor.Options[Option.AutoExposurePriority].Value = 0f; } catch { }
+                }
+                
+
                 // 配置相机宽高，帧数
                 cfg.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 15);
                 // 这里注意 GDI Bitmap 中，像素排列是 BGR 而不是 RGB
-                cfg.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 15);                 
+                cfg.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 15);
             }
 
             // 启动相机     
@@ -78,6 +93,8 @@ namespace GDI.Services
             // 对齐过滤器
             Align align = new Align(Intel.RealSense.Stream.Color);
 
+            temporal.Options[Option.HolesFill].Value = 3f;
+            holoFillingFilter.Options[Option.HolesFill].Value = 2f; // Nearest
             //bool is_CD = false;                                      //吴名添加
 
             while (!token.IsCancellationRequested)
@@ -121,6 +138,7 @@ namespace GDI.Services
             }
             Console.WriteLine("相机已停止");
         }
+        
 
 
         // Frame 转 Bitmap, 防止内存泄漏

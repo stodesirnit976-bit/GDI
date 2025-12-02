@@ -377,16 +377,20 @@ namespace GDI
         private float alpha = 0.25f;
 
         // -------- 相机启动 --------
-        private void cam_Start()
+        private async Task cam_Start()
         {
             cam.cam_Thread_start();
-            // 订阅相机事件，进行标定
-            calib.Calibration_subCamEvent(cam);
             // 订阅相机事件，获取画面
             cam.cam_Event += panel_Update;
 
-            Thread.Sleep(20000);                       //wm修改
-            calib.Calibration2_subCamEvent(cam);      //wm修改
+            //await Task.Run(async () =>
+            //{
+                // 订阅相机事件，进行标定
+                calib.Calibration_subCamEvent(cam);
+            /*await Task.Delay(20000);*/
+            Thread.Sleep(23000);//wm修改
+                calib.Calibration2_subCamEvent(cam);      //wm修改
+            //});            
         }
         // -------- 相机关闭 --------
         private void cam_stop()

@@ -31,12 +31,13 @@ namespace GDI.Services.CameraServices
 
             // 订阅相机帧事件
             cam.cam_Event += imgProcessor;
+            
         }
 
         //rm_position_t q;
         private void imgProcessor(Bitmap ColorBitmap, Bitmap DepthColorBitmap, DepthFrame depthFrame, Intrinsics intrinsics)
         {
-            if ((DateTime.Now - startTime).TotalSeconds < 7) return;
+            if ((DateTime.Now - startTime).TotalSeconds < 9) return;
 
             Console.WriteLine("相机启动超过7秒，第一次标定");
             // 处理帧数据进行标定
@@ -45,15 +46,16 @@ namespace GDI.Services.CameraServices
             rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
             rm_current_arm_state_t state = new rm_current_arm_state_t();
             rm_get_current_arm_state(Arm.Instance.robotHandlePtr, ref state);
-            state.pose.position.x = q.x + 0.4f;
+            state.pose.position.x = q.x + 0.6f;
             state.pose.position.y = q.y + 0.2f;
-            state.pose.position.z = q.z - 0.1f;
+            state.pose.position.z = q.z - 0.15f;
             rm_movej_p(Arm.Instance.robotHandlePtr, state.pose, 15, 0, 0, 1);
 
             // 标定完成，取消订阅相机帧事件
             cam.cam_Event -= imgProcessor;
-
             isCalibrating = false;
+            //Task.Delay(15000);
+            //Calibration2_subCamEvent(this.cam);
         }
 
         public void Calibration2_subCamEvent(Camera cam)//wm修改
@@ -70,9 +72,10 @@ namespace GDI.Services.CameraServices
         //wm修改
         private void imgProcessor2(Bitmap ColorBitmap, Bitmap DepthColorBitmap, DepthFrame depthFrame, Intrinsics intrinsics)
         {
-            if ((DateTime.Now - startTime).TotalSeconds < 2) return;
+            if ((DateTime.Now - startTime).TotalSeconds < 0.5) return;
             startTime = DateTime.Now;
             // 处理帧数据进行标定
+            //Task.Delay(500);
             Console.WriteLine("正在第二次标定");
             Init(ColorBitmap, depthFrame, intrinsics);
 
@@ -125,7 +128,7 @@ namespace GDI.Services.CameraServices
                     pixelColor = bitmap.GetPixel(x, y);
                     if ((pixelColor.R > pixelColor.B * 3 / 2) && (pixelColor.R > pixelColor.G * 3 / 2) && pixelColor.R > 100)
                     {
-                        if (x < max_x_q && y < max_y_q)
+                        if (x < max_x_q && y < max_y_q && Math.Abs(y - max_y_p) > 10 && Math.Abs(x - max_x_o) > 10)
                         {
                             max_x_q = x;
                             max_y_q = y;
@@ -162,11 +165,13 @@ namespace GDI.Services.CameraServices
             rm_position_t p_base = CoordinateTransformer.TransformPoint(p_tool, state.pose);
             rm_position_t o_base = CoordinateTransformer.TransformPoint(o_tool, state.pose);
 
-            if (Math.Abs(CoordinateTransformCalculator.Distance(q_base, p_base) - CoordinateTransformCalculator.Distance(q_base, o_base)) < 0.015
-                && CoordinateTransformCalculator.Distance(q_base, p_base) > 0.05
-                && CoordinateTransformCalculator.Distance(q_base, p_base) < 0.07
-                && CoordinateTransformCalculator.Distance(q_base, o_base) > 0.05
-                && CoordinateTransformCalculator.Distance(q_base, o_base) < 0.07)
+            double qp = CoordinateTransformCalculator.Distance(q_base, p_base);
+            double qo = CoordinateTransformCalculator.Distance(q_base, o_base);
+            if (Math.Abs(qp - qo) < 0.01d
+                && qp > 0.03d
+                && qp < 0.07d
+                && qo > 0.03d
+                && qo < 0.07d)
             {
                 rm_pose_t set_base = CoordinateTransformCalculator.CalculatePose(q_base, p_base, o_base);
                 rm_delete_work_frame(Arm.Instance.robotHandlePtr, "work1");
@@ -176,8 +181,8 @@ namespace GDI.Services.CameraServices
                 else MessageBox.Show("pose fail!");
                 is_success = true;
             }
-
-            //Console.WriteLine(CoordinateTransformCalculator.Distance(q_base, p_base) + ";" + CoordinateTransformCalculator.Distance(q_base, o_base));
+            Console.WriteLine($"Q.z: {q_base.x}, P.z: {p_base.x}, O.z: {o_base.x}");
+            Console.WriteLine(qp + ";" + qo);
 
             return q_base;
         }
