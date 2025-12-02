@@ -84,7 +84,7 @@ namespace GDI.Services.CameraServices
                 rm_movej(Arm.Instance.robotHandlePtr, c_ini, 15, 0, 0, 0);
                 rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
                 cam.cam_Event -= imgProcessor2;
-                Console.WriteLine("二次标定完成！");
+                MessageBox.Show("标定完成！可以执行");
             }
 
             isCalibrating2 = false;

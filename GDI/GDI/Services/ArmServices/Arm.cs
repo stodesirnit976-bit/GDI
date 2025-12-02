@@ -256,7 +256,11 @@ namespace GDI.Services
         [DllImport("api_c.dll", EntryPoint = "rm_movej_p", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern int rm_movej_p(IntPtr handle, rm_pose_t pose, int v, int r, int trajectory_connect, int block);
 
+        [DllImport("api_c.dll", EntryPoint = "rm_set_arm_delete_trajectory", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int rm_set_arm_delete_trajectory(IntPtr handle);
 
+        [DllImport("api_c.dll", EntryPoint = "rm_set_arm_pause", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int rm_set_arm_pause(IntPtr handle);
 
 
 
@@ -327,33 +331,33 @@ namespace GDI.Services
             rm_pose_t c_1 = new();
             rm_pose_t c_2 = new();
 
-            rm_pose_t c2 = new();   // 运动位姿
-            c2.position.x = 0;
-            c2.position.y = 0.05f;
+            rm_pose_t c2 = new();
+            c2.position.x = Arg.c2PositionX;//值越大越往下
+            c2.position.y = Arg.c2PositionY;//值越大越往右
             c2.position.z = height;
             c2.euler.rx = (float)Math.PI;
             c2.euler.ry = 0;
             c2.euler.rz = (float)Math.PI / 2;
 
-            rm_pose_t c3 = new();   // 运动位姿
-            c3.position.x = 0;
-            c3.position.y = 0.05f + len;
+            rm_pose_t c3 = new();   
+            c3.position.x = Arg.c2PositionX;//同c2.position.x
+            c3.position.y = Arg.c2PositionY + len;//同c2.position.y
             c3.position.z = height;
             c3.euler.rx = (float)Math.PI;
             c3.euler.ry = 0;
             c3.euler.rz = (float)Math.PI / 2;
 
-            rm_pose_t c4 = new();   // 运动位姿
-            c4.position.x = wid;
-            c4.position.y = 0.05f;
+            rm_pose_t c4 = new();   
+            c4.position.x = Arg.c2PositionX + wid;
+            c4.position.y = Arg.c2PositionY;
             c4.position.z = height;
             c4.euler.rx = (float)Math.PI;
             c4.euler.ry = 0;
             c4.euler.rz = (float)Math.PI;
 
             rm_pose_t c5 = new();   // 运动位姿
-            c5.position.x = 0;
-            c5.position.y = 0.05f;
+            c5.position.x = Arg.c2PositionX;
+            c5.position.y = Arg.c2PositionY;
             c5.position.z = height;
             c5.euler.rx = (float)Math.PI;
             c5.euler.ry = 0;
@@ -416,7 +420,13 @@ namespace GDI.Services
             //else
             //    MessageBox.Show("[rm_create_robot_arm] connect error:" + robotHandle.id);
         }
-
+        public static void backTOInitState()
+        {
+            rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
+            int ret = rm_movej(Arm.Instance.robotHandlePtr, c_ini, 20, 0, 0, 1);
+            if (ret != 0) MessageBox.Show("[rm_move_joint] Error occurred: " + ret);
+            rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
+        }
 
 
         public void move(float len, float wid, float height, bool N, int count, int vol, bool on)

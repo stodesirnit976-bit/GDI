@@ -72,14 +72,10 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btn_test = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btn_calibration = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.btn_movetodot = new System.Windows.Forms.Button();
-            this.btn_backtostart = new System.Windows.Forms.Button();
             this.rbt_PfintOFF = new System.Windows.Forms.RadioButton();
             this.rbt_PrintON = new System.Windows.Forms.RadioButton();
+            this.btn_RESEAT = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -92,7 +88,7 @@
             // 
             // btn_Detail
             // 
-            this.btn_Detail.Location = new System.Drawing.Point(28, 178);
+            this.btn_Detail.Location = new System.Drawing.Point(28, 519);
             this.btn_Detail.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Detail.Name = "btn_Detail";
             this.btn_Detail.Size = new System.Drawing.Size(222, 58);
@@ -207,6 +203,7 @@
             this.textBox_trans.Name = "textBox_trans";
             this.textBox_trans.Size = new System.Drawing.Size(51, 21);
             this.textBox_trans.TabIndex = 33;
+            this.textBox_trans.Text = "15";
             // 
             // label14
             // 
@@ -226,6 +223,7 @@
             this.textBox_height.Name = "textBox_height";
             this.textBox_height.Size = new System.Drawing.Size(47, 21);
             this.textBox_height.TabIndex = 31;
+            this.textBox_height.Text = "2.7";
             // 
             // label4
             // 
@@ -267,6 +265,7 @@
             this.textBox_width.Name = "textBox_width";
             this.textBox_width.Size = new System.Drawing.Size(47, 21);
             this.textBox_width.TabIndex = 28;
+            this.textBox_width.Text = "2.8";
             // 
             // label8
             // 
@@ -308,6 +307,7 @@
             this.textBox_length.Name = "textBox_length";
             this.textBox_length.Size = new System.Drawing.Size(47, 21);
             this.textBox_length.TabIndex = 25;
+            this.textBox_length.Text = "15.4";
             // 
             // label10
             // 
@@ -362,6 +362,7 @@
             this.textBox_volume.Name = "textBox_volume";
             this.textBox_volume.Size = new System.Drawing.Size(58, 21);
             this.textBox_volume.TabIndex = 11;
+            this.textBox_volume.Text = "120";
             // 
             // textBox_tareWeight
             // 
@@ -370,6 +371,7 @@
             this.textBox_tareWeight.Name = "textBox_tareWeight";
             this.textBox_tareWeight.Size = new System.Drawing.Size(58, 21);
             this.textBox_tareWeight.TabIndex = 10;
+            this.textBox_tareWeight.Text = "22.5";
             // 
             // label7
             // 
@@ -389,6 +391,7 @@
             this.textBox_payLoad.Name = "textBox_payLoad";
             this.textBox_payLoad.Size = new System.Drawing.Size(58, 21);
             this.textBox_payLoad.TabIndex = 9;
+            this.textBox_payLoad.Text = "60";
             // 
             // label3
             // 
@@ -476,7 +479,7 @@
             // 
             // btn_Generate
             // 
-            this.btn_Generate.Location = new System.Drawing.Point(28, 396);
+            this.btn_Generate.Location = new System.Drawing.Point(28, 184);
             this.btn_Generate.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Generate.Name = "btn_Generate";
             this.btn_Generate.Size = new System.Drawing.Size(222, 58);
@@ -508,7 +511,7 @@
             // 
             // btn_EStop
             // 
-            this.btn_EStop.Location = new System.Drawing.Point(28, 547);
+            this.btn_EStop.Location = new System.Drawing.Point(28, 410);
             this.btn_EStop.Margin = new System.Windows.Forms.Padding(2);
             this.btn_EStop.Name = "btn_EStop";
             this.btn_EStop.Size = new System.Drawing.Size(222, 58);
@@ -519,7 +522,7 @@
             // 
             // btn_Wrok
             // 
-            this.btn_Wrok.Location = new System.Drawing.Point(28, 475);
+            this.btn_Wrok.Location = new System.Drawing.Point(28, 286);
             this.btn_Wrok.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Wrok.Name = "btn_Wrok";
             this.btn_Wrok.Size = new System.Drawing.Size(222, 58);
@@ -530,7 +533,7 @@
             // 
             // btn_SysInit
             // 
-            this.btn_SysInit.Location = new System.Drawing.Point(28, 285);
+            this.btn_SysInit.Location = new System.Drawing.Point(28, 66);
             this.btn_SysInit.Margin = new System.Windows.Forms.Padding(2);
             this.btn_SysInit.Name = "btn_SysInit";
             this.btn_SysInit.Size = new System.Drawing.Size(222, 58);
@@ -545,6 +548,7 @@
             this.tbx_UVheight.Name = "tbx_UVheight";
             this.tbx_UVheight.Size = new System.Drawing.Size(53, 21);
             this.tbx_UVheight.TabIndex = 37;
+            this.tbx_UVheight.Text = "10";
             // 
             // label13
             // 
@@ -582,39 +586,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "机械臂设置";
             // 
-            // btn_test
-            // 
-            this.btn_test.Location = new System.Drawing.Point(28, 11);
-            this.btn_test.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_test.Name = "btn_test";
-            this.btn_test.Size = new System.Drawing.Size(222, 58);
-            this.btn_test.TabIndex = 0;
-            this.btn_test.Text = "io高电平";
-            this.btn_test.UseVisualStyleBackColor = true;
-            this.btn_test.Click += new System.EventHandler(this.btn_test_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(28, 84);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(222, 58);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "io低电平";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.btn_test2_Click);
-            // 
-            // btn_calibration
-            // 
-            this.btn_calibration.Location = new System.Drawing.Point(55, 700);
-            this.btn_calibration.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_calibration.Name = "btn_calibration";
-            this.btn_calibration.Size = new System.Drawing.Size(136, 43);
-            this.btn_calibration.TabIndex = 0;
-            this.btn_calibration.Text = "喷印触发状态";
-            this.btn_calibration.UseVisualStyleBackColor = true;
-            this.btn_calibration.Click += new System.EventHandler(this.btn_calibration_Click);
-            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(274, 1289);
@@ -625,28 +596,6 @@
             this.button3.Text = "io高电平";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.btn_test_Click);
-            // 
-            // btn_movetodot
-            // 
-            this.btn_movetodot.Location = new System.Drawing.Point(216, 701);
-            this.btn_movetodot.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_movetodot.Name = "btn_movetodot";
-            this.btn_movetodot.Size = new System.Drawing.Size(114, 42);
-            this.btn_movetodot.TabIndex = 0;
-            this.btn_movetodot.Text = "移动到标定点";
-            this.btn_movetodot.UseVisualStyleBackColor = true;
-            this.btn_movetodot.Click += new System.EventHandler(this.btn_movetodot_Click);
-            // 
-            // btn_backtostart
-            // 
-            this.btn_backtostart.Location = new System.Drawing.Point(364, 700);
-            this.btn_backtostart.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_backtostart.Name = "btn_backtostart";
-            this.btn_backtostart.Size = new System.Drawing.Size(114, 42);
-            this.btn_backtostart.TabIndex = 0;
-            this.btn_backtostart.Text = "返回初始位置";
-            this.btn_backtostart.UseVisualStyleBackColor = true;
-            this.btn_backtostart.Click += new System.EventHandler(this.btn_backtostart_Click);
             // 
             // rbt_PfintOFF
             // 
@@ -673,11 +622,22 @@
             this.rbt_PrintON.Text = "开启喷印触发";
             this.rbt_PrintON.UseVisualStyleBackColor = true;
             // 
+            // btn_RESEAT
+            // 
+            this.btn_RESEAT.Location = new System.Drawing.Point(28, 685);
+            this.btn_RESEAT.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_RESEAT.Name = "btn_RESEAT";
+            this.btn_RESEAT.Size = new System.Drawing.Size(222, 58);
+            this.btn_RESEAT.TabIndex = 0;
+            this.btn_RESEAT.Text = "重启";
+            this.btn_RESEAT.UseVisualStyleBackColor = true;
+            this.btn_RESEAT.Click += new System.EventHandler(this.btn_RESEAT_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 754);
+            this.ClientSize = new System.Drawing.Size(1583, 754);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btn_Generate);
@@ -686,13 +646,9 @@
             this.Controls.Add(this.btn_SysInit);
             this.Controls.Add(this.btn_Wrok);
             this.Controls.Add(this.btn_EStop);
-            this.Controls.Add(this.btn_backtostart);
-            this.Controls.Add(this.btn_movetodot);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.btn_calibration);
-            this.Controls.Add(this.btn_test);
             this.Controls.Add(this.rbt_PrintON);
+            this.Controls.Add(this.btn_RESEAT);
             this.Controls.Add(this.btn_Detail);
             this.Controls.Add(this.rbt_PfintOFF);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -762,13 +718,9 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btn_test;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button btn_calibration;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button btn_movetodot;
-        private System.Windows.Forms.Button btn_backtostart;
         private System.Windows.Forms.RadioButton rbt_PfintOFF;
         private System.Windows.Forms.RadioButton rbt_PrintON;
+        private System.Windows.Forms.Button btn_RESEAT;
     }
 }

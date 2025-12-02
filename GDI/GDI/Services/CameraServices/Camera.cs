@@ -25,7 +25,7 @@ namespace GDI.Services
 
         // 对外输出一帧图像的事件
         public event Action<Bitmap, Bitmap, DepthFrame,Intrinsics> cam_Event;
-
+        PipelineProfile pp;
         private void cam_Thread(CancellationToken token)
         {
             var cfg = new Config();
@@ -64,7 +64,7 @@ namespace GDI.Services
             }
 
             // 启动相机     
-            PipelineProfile pp = pipe.Start(cfg);
+            pp = pipe.Start(cfg);
             Console.WriteLine("相机已启动");
             // 获取相机内参
             var profile = pp.GetStream(Intel.RealSense.Stream.Depth).As<VideoStreamProfile>();
@@ -154,6 +154,8 @@ namespace GDI.Services
                 cts = null;
             }
             camServ = null;
+            pp.Dispose();
+            pipe.Dispose();
         }
 
        

@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Arg.cs" />
     <Compile Include="Models\ArmParams.cs" />
     <Compile Include="Services\ArmServices\TransformCalculator.cs" />
     <Compile Include="Core\PictureListLoader.cs" />

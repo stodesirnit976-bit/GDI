@@ -54,6 +54,11 @@ namespace GDI
 
             // 初始化命名数
             count = 0;
+
+            // 初始化详情页面
+            detailForm = new Form1();
+
+            Console.WriteLine($"{Arg.laserDistance} || {Arg.c2PositionX} || {Arg.c2PositionY}");
         }
 
         // -------- 窗口加载事件：初始化下拉框 ------------
@@ -97,9 +102,14 @@ namespace GDI
         // -------- 机械臂急停按钮 --------
         private void btn_EStop_Click(object sender, EventArgs e)
         {
-            detailForm.arm_EStop();
-        }
+            //detailForm.arm_EStop();
+            Arm.rm_set_arm_pause(Arm.Instance.robotHandlePtr);
+            Arm.rm_set_arm_delete_trajectory(Arm.Instance.robotHandlePtr);
 
+            Arm.backTOInitState();
+            Console.WriteLine("机械臂手动急停完成");
+        }
+        
 
 
         // ===================================================================================================
@@ -107,32 +117,11 @@ namespace GDI
         // ===================================================================================================
         private void btn_test_Click(object sender, EventArgs e)
         {
-            if (detailForm == null || detailForm.IsDisposed)
-            {
-                detailForm = new Form1();    
-            }
-
-            int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
-            Thread.Sleep(100);
-            int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
-            Console.WriteLine($"2号口设置为输出模式高电平{a}");
+            
         }
         private void btn_test2_Click(object sender, EventArgs e)
         {
-            if (detailForm == null || detailForm.IsDisposed)
-            {
-                detailForm = new Form1();
-
-
             
-            }
-            
-            int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
-            Thread.Sleep(1);
-            //int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
-
-            Console.WriteLine($"2号口设置为输出模式低电平{b}");
-                   
             
         }
 
@@ -193,18 +182,28 @@ namespace GDI
 
             // 启动socket服务
             // 默认初始化只连接9837端口，8080靠9837发送命令启动/关闭
-            detailForm.socket9837_Connect();
-            detailForm.socket8080_Connect();
+            //detailForm.socket9837_Connect();
+            //detailForm.socket8080_Connect();
             // 启动激光测距传感器
             detailForm.laser_Start();
             // 等待机械臂初始化完成
             // 启动相机服务并标定
             if (ret == 6)
                 cam_Start();
-
         }
 
+        private void btn_RESEAT_Click(object sender, EventArgs e)
+        {
+            //detailForm.socket_close();
+            // 关闭相机服务
+            cam_stop();
+            // 关闭激光测距传感器
+            //detailForm.laser_Stop();
+            // 断开机械臂并恢复初始化姿态
+            MessageBox.Show("系统已重置！");
+            cam_Start();
 
+        }
 
 
         // ===================================================================================================
@@ -375,7 +374,7 @@ namespace GDI
 
         private Bitmap imagecolor;
         private Bitmap imagedepth;
-        private float alpha = 0.4f;
+        private float alpha = 0.25f;
 
         // -------- 相机启动 --------
         private void cam_Start()

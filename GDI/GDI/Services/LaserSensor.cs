@@ -58,11 +58,15 @@ namespace GDI.Services
                 }
 
                 // 机械臂急停,需要注意值究竟是多少,要不要取多次数据融合？
-                if (distance != 0 && distance < 216)
+                if (distance != 0 && distance < Arg.laserDistance)
                 {
                     Task.Run(() =>
                     {
-                        Arm.rm_set_arm_stop(Arm.Instance.robotHandlePtr);
+                        Arm.rm_set_arm_pause(Arm.Instance.robotHandlePtr);
+                        Arm.rm_set_arm_delete_trajectory(Arm.Instance.robotHandlePtr);
+
+                        Arm.backTOInitState();
+                        Console.WriteLine("机械臂自动急停完成");
                     });
                 }
                 //\rm_get_current_arm_state(Arm.Instance.robotHandlePtr, ref state_1);

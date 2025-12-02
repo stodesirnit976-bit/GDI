@@ -33,17 +33,17 @@ namespace GDI
         string sliceSavePath = @"D:\TextImages\SliceImages"; // 切割图片存放文件夹
         string loadPath = @"D:\img"; // 选取图片文件夹
 
-
+        
         // ================= 窗口初始化 ==================
         public Form1()
         {
             
             InitializeComponent();
 
-
+            Arg_Update();
             //Control.CheckForIllegalCrossThreadCalls = false; 这行代码强制关闭了多线程冲突
 
-            
+
         }
 
 
@@ -85,7 +85,7 @@ namespace GDI
 
         private void btn_camSTART_Click(object sender, EventArgs e)
         {
-
+            
         }
 
 
@@ -308,36 +308,8 @@ namespace GDI
         // -------- 机械臂开关喷印系统触发 --------
         private void btn_noPrintf_Click(object sender, EventArgs e)
         {
-            bool _switch = radioButton_PrintClose.Checked;
-            int ret = Arm.rm_set_IO_mode(Arm.Instance.robotHandlePtr, 3, 1);// 设置为通用输出模式
-            if (_switch)
-            {
-                int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 3, 1);// 设置1号端口输出低电平
-                //Arm.rm_set_IO_mode(Arm.Instance.robotHandlePtr, 2, 0);// 1号 io 端口设置为通用输入模式(即关闭uv触发的io输出)
-                Console.WriteLine($"2号口设置为输出模式低电平{ret}{a}");
-            }
-            else
-            {
-
-                int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 3, 0);// 设置1号端口输出低电平
-                Console.WriteLine($"2号口设置为输出模式高电平{ret}{b}");
-            }
+            bool _switch = rbt_H_PrintON.Checked;
             // 以上是高电平2v，低电平1v。并且不知道为什么不管设置哪个io口，接的那根线都会输出变化电平
-        }
-
-
-        // ================= 模版 ==============
-
-        // -------- 机械臂调速滑块 --------
-        private void trackBar_speed_Scroll(object sender, EventArgs e)
-        {
-            label_speed.Text = trackBar_speed.Value.ToString();
-        }
-
-        // -------- 机械臂运行 --------
-        private async void btn_start_Click(object sender, EventArgs e)
-        {
-            
         }
 
 
@@ -437,21 +409,24 @@ namespace GDI
 
 
         // ===================================================================================================
-        // ====================================== 机械比状态数据更新 =========================================
+        // ====================================== 机械臂位置/姿态参数 =========================================
         // ===================================================================================================
 
 
         // 纯传后台线程参数
-        private void State_Update(string v, string c, string t)
+        public void Arg_Update()
         {
-            // 这里没有通过 while 标志位来实现循环终止，因为 plusss 里是不是无线循环
-            this.BeginInvoke(new Action(() =>
-            {
-                label_c.Text = c;
-            }));
+            Arg.c2PositionX = float.Parse(tbx_c2PositionX.Text) / 1000;
+            Arg.c2PositionY = float.Parse(tbx_c2PositionY.Text) / 1000;
+            Arg.laserDistance = int.Parse(tbx_laser.Text);
+           
         }
 
-        
+        private void btn_UpdateArgs_Click(object sender, EventArgs e)
+        {
+            Arg_Update();
+            Console.WriteLine($"{Arg.laserDistance} || {Arg.c2PositionX} || {Arg.c2PositionY}");
+        }
     }
 
 }
