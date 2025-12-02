@@ -58,7 +58,7 @@ namespace GDI.Services
                 }
 
                 // 机械臂急停,需要注意值究竟是多少,要不要取多次数据融合？
-                if (distance != 0 && distance < 231)
+                if (distance != 0 && distance < 229)
                 {
                     Task.Run(() =>
                     {

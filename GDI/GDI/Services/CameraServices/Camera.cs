@@ -58,9 +58,9 @@ namespace GDI.Services
                                     .Select(p => p.As<VideoStreamProfile>()).First();
     
                 // 配置相机宽高，帧数
-                cfg.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 30);
+                cfg.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 15);
                 // 这里注意 GDI Bitmap 中，像素排列是 BGR 而不是 RGB
-                cfg.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 30);                 
+                cfg.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 15);                 
             }
 
             // 启动相机     

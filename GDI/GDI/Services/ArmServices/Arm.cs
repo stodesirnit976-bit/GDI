@@ -369,9 +369,9 @@ namespace GDI.Services
             {
                 rm_movel(Arm.Instance.robotHandlePtr, c_1, vol, r, 1, 1);
 
-                //print();  // 触发喷印
-                //Thread.Sleep(2800); //
-                
+                print();  // 触发喷印
+                Thread.Sleep(2800); //
+
                 rm_movel(Arm.Instance.robotHandlePtr, c_2, vol, r, 1, 1);
 
                 double runTime =  (DateTime.Now - startTime).TotalMilliseconds;

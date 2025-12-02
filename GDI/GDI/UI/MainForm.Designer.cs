@@ -74,6 +74,10 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_test = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.btn_calibration = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.btn_movetodot = new System.Windows.Forms.Button();
+            this.btn_backtostart = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -598,6 +602,50 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.btn_test2_Click);
             // 
+            // btn_calibration
+            // 
+            this.btn_calibration.Location = new System.Drawing.Point(55, 700);
+            this.btn_calibration.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_calibration.Name = "btn_calibration";
+            this.btn_calibration.Size = new System.Drawing.Size(136, 43);
+            this.btn_calibration.TabIndex = 0;
+            this.btn_calibration.Text = "标定";
+            this.btn_calibration.UseVisualStyleBackColor = true;
+            this.btn_calibration.Click += new System.EventHandler(this.btn_calibration_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(274, 1289);
+            this.button3.Margin = new System.Windows.Forms.Padding(2);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(222, 58);
+            this.button3.TabIndex = 0;
+            this.button3.Text = "io高电平";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.btn_test_Click);
+            // 
+            // btn_movetodot
+            // 
+            this.btn_movetodot.Location = new System.Drawing.Point(216, 701);
+            this.btn_movetodot.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_movetodot.Name = "btn_movetodot";
+            this.btn_movetodot.Size = new System.Drawing.Size(114, 42);
+            this.btn_movetodot.TabIndex = 0;
+            this.btn_movetodot.Text = "移动到标定点";
+            this.btn_movetodot.UseVisualStyleBackColor = true;
+            this.btn_movetodot.Click += new System.EventHandler(this.btn_movetodot_Click);
+            // 
+            // btn_backtostart
+            // 
+            this.btn_backtostart.Location = new System.Drawing.Point(364, 700);
+            this.btn_backtostart.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_backtostart.Name = "btn_backtostart";
+            this.btn_backtostart.Size = new System.Drawing.Size(114, 42);
+            this.btn_backtostart.TabIndex = 0;
+            this.btn_backtostart.Text = "返回初始位置";
+            this.btn_backtostart.UseVisualStyleBackColor = true;
+            this.btn_backtostart.Click += new System.EventHandler(this.btn_backtostart_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -611,7 +659,11 @@
             this.Controls.Add(this.btn_SysInit);
             this.Controls.Add(this.btn_Wrok);
             this.Controls.Add(this.btn_EStop);
+            this.Controls.Add(this.btn_backtostart);
+            this.Controls.Add(this.btn_movetodot);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btn_calibration);
             this.Controls.Add(this.btn_test);
             this.Controls.Add(this.btn_Detail);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -682,5 +734,9 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btn_test;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_calibration;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btn_movetodot;
+        private System.Windows.Forms.Button btn_backtostart;
     }
 }
