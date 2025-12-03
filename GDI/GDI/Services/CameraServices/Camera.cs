@@ -66,40 +66,43 @@ namespace GDI.Services
                     try { sensor.Options[Option.VisualPreset].Value = 3f; } catch { }
                 }
 
-                if (colorSensor.Options.Supports(Option.AutoExposurePriority))
-                {
-                    try { colorSensor.Options[Option.AutoExposurePriority].Value = 0f; } catch { }
-                }
-                
+                //if (colorSensor.Options.Supports(Option.AutoExposurePriority))
+                //{
+                //    try { colorSensor.Options[Option.AutoExposurePriority].Value = 0f; } catch { }
+                //}
+
 
                 // 配置相机宽高，帧数
-                cfg.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 15);
+                cfg.EnableStream(Intel.RealSense.Stream.Depth, 1280, 720, Format.Z16, 30);
                 // 这里注意 GDI Bitmap 中，像素排列是 BGR 而不是 RGB
-                cfg.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 15);
+                cfg.EnableStream(Intel.RealSense.Stream.Color, 1280, 720, Format.Bgr8, 30);
             }
 
             // 启动相机     
             pp = pipe.Start(cfg);
             Console.WriteLine("相机已启动");
             // 获取相机内参
-            var profile = pp.GetStream(Intel.RealSense.Stream.Depth).As<VideoStreamProfile>();
+            //var profile = pp.GetStream(Intel.RealSense.Stream.Depth).As<VideoStreamProfile>();
+            //intrinsics = profile.GetIntrinsics();
+            var profile = pp.GetStream(Intel.RealSense.Stream.Color).As<VideoStreamProfile>();
             intrinsics = profile.GetIntrinsics();
 
+            // 对齐过滤器
+            Align align = new Align(Intel.RealSense.Stream.Color);
             // 过滤器：实间，空间，孔洞填充等
             SpatialFilter spat_filter = new SpatialFilter();
             TemporalFilter temporal = new TemporalFilter();
             HoleFillingFilter holoFillingFilter = new HoleFillingFilter();
             Colorizer color_map = new Colorizer();
-            // 对齐过滤器
-            Align align = new Align(Intel.RealSense.Stream.Color);
+            
 
-            temporal.Options[Option.HolesFill].Value = 3f;
-            holoFillingFilter.Options[Option.HolesFill].Value = 2f; // Nearest
+            //temporal.Options[Option.HolesFill].Value = 3f;
+            //holoFillingFilter.Options[Option.HolesFill].Value = 2f; // Nearest
             //bool is_CD = false;                                      //吴名添加
 
             while (!token.IsCancellationRequested)
             {
-                using (var frames = pipe.WaitForFrames(10000))
+                using (var frames = pipe.WaitForFrames(5000))
                 {
                     // 1.空间滤波
                     Frame aligned = spat_filter.Process(frames).DisposeWith(frames);

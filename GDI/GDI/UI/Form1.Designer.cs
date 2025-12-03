@@ -1010,9 +1010,9 @@
             this.label6.Location = new System.Drawing.Point(28, 41);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(142, 19);
+            this.label6.Size = new System.Drawing.Size(180, 19);
             this.label6.TabIndex = 21;
-            this.label6.Text = "激光传感器阈值";
+            this.label6.Text = "激光传感器急停阈值";
             // 
             // textBox9
             // 
@@ -1054,7 +1054,7 @@
             // 
             this.label39.AutoSize = true;
             this.label39.Font = new System.Drawing.Font("宋体", 13F);
-            this.label39.Location = new System.Drawing.Point(236, 42);
+            this.label39.Location = new System.Drawing.Point(274, 42);
             this.label39.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(26, 18);
@@ -1154,7 +1154,7 @@
             // 
             // tbx_laser
             // 
-            this.tbx_laser.Location = new System.Drawing.Point(175, 39);
+            this.tbx_laser.Location = new System.Drawing.Point(213, 39);
             this.tbx_laser.Name = "tbx_laser";
             this.tbx_laser.Size = new System.Drawing.Size(56, 21);
             this.tbx_laser.TabIndex = 23;

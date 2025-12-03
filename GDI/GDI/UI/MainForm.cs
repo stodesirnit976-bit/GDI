@@ -2,6 +2,7 @@
 using GDI.Models;
 using GDI.Services;
 using GDI.Services.CameraServices;
+using GDI.UI;
 using Intel.RealSense;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace GDI
         private TextRender TextRender = new TextRender();
 
 
-        
+
         public MainForm()
         {
             InitializeComponent();
@@ -60,6 +61,8 @@ namespace GDI
 
             Console.WriteLine($"{Arg.laserDistance} || {Arg.c2PositionX} || {Arg.c2PositionY}");
         }
+
+            
 
         // -------- 窗口加载事件：初始化下拉框 ------------
         private void MainForm_Load(object sender, EventArgs e)
@@ -115,33 +118,14 @@ namespace GDI
         // ===================================================================================================
         // =========================================== TEST ==================================================
         // ===================================================================================================
-        private void btn_test_Click(object sender, EventArgs e)
-        {
-            
-        }
-        private void btn_test2_Click(object sender, EventArgs e)
-        {
-            
-            
-        }
+        
+        
 
         private void btn_Wrok_Click(object sender, EventArgs e)
         {
             arm_Start();
         }
-        private void btn_calibration_Click(object sender, EventArgs e)
-        {
-            
-            
-        }
-        private void btn_movetodot_Click(object sender, EventArgs e)
-        {
-            
-        }
-        private void btn_backtostart_Click(object sender, EventArgs e)
-        {
-            //calib.backToStart();
-        }
+        
         // ===================================================================================================
         // =========================================== 后台详情 ==============================================
         // ===================================================================================================
@@ -161,13 +145,19 @@ namespace GDI
         // ===================================================================================================
         // =========================================== 系统初始化 ============================================
         // ===================================================================================================
-        private void btn_SysInit_Click(object sender, EventArgs e)
+        private async void btn_SysInit_Click(object sender, EventArgs e)
         {
+            LoadingForm loadingForm = new LoadingForm();
+
             if (detailForm == null || detailForm.IsDisposed)
             {
                 detailForm = new Form1();
                 var handle = detailForm.Handle; // 强制创建句柄
             }
+
+            // 初始化进度条
+            btn_SysInit.Enabled = false;
+           
 
 
             // 初始化机械臂并恢复初始化姿态
@@ -185,12 +175,19 @@ namespace GDI
             //detailForm.socket9837_Connect();
             //detailForm.socket8080_Connect();
             // 启动激光测距传感器
-            detailForm.laser_Start();
+            //detailForm.laser_Start();
             // 等待机械臂初始化完成
             // 启动相机服务并标定
             if (ret == 6)
                 cam_Start();
+
+            // 显示加载进度条窗口
+            //loadingForm.ShowDialog(this);
+            //MessageBox.Show("系统初始化完成！");  
+
+            btn_SysInit.Enabled = true;
         }
+
 
         private void btn_RESEAT_Click(object sender, EventArgs e)
         {
@@ -305,11 +302,10 @@ namespace GDI
             arm_Start();
 
             // 怎么确定喷印结束？阻塞？不好急停不靠谱；有没有类似信号量任务通知的机制？autoreseevent
-            while (true)
-            {
+            
                 SyncOjbects.armFinsh.WaitOne();
                 detailForm.socket9837_Send("@StopPrint@");
-            }            
+                      
         }
 
 
@@ -383,14 +379,14 @@ namespace GDI
             // 订阅相机事件，获取画面
             cam.cam_Event += panel_Update;
 
-            //await Task.Run(async () =>
-            //{
+            await Task.Run(async () =>
+            {
                 // 订阅相机事件，进行标定
                 calib.Calibration_subCamEvent(cam);
-            /*await Task.Delay(20000);*/
-            Thread.Sleep(23000);//wm修改
-                calib.Calibration2_subCamEvent(cam);      //wm修改
-            //});            
+                //await Task.Delay(20000);
+                //Thread.Sleep(23000);//wm修改
+                //calib.Calibration2_subCamEvent(cam);      //wm修改
+            });
         }
         // -------- 相机关闭 --------
         private void cam_stop()
@@ -470,6 +466,7 @@ namespace GDI
                     MessageBox.Show("机械臂启动失败: " + ex.Message);
                 }
             });
+            Console.WriteLine("发送运行结束信号");
             SyncOjbects.armFinsh.Set(); // 机械臂运行结束信号
         }
 

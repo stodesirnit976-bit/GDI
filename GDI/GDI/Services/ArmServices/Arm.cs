@@ -304,7 +304,7 @@ namespace GDI.Services
         //    }
         //}
 
-        public static float[] c_ini = { 0, 94, -129.5f, 0, -62.4f, 0 };     //wm修改
+        public static float[] c_ini = { 0, 99, -97, 0, -100, 0 };     //wm修改
 
         // ==========================================
         private Arm()
@@ -420,6 +420,8 @@ namespace GDI.Services
             //else
             //    MessageBox.Show("[rm_create_robot_arm] connect error:" + robotHandle.id);
         }
+
+        // -------------- 机械臂回到初始位置 ------------------
         public static void backTOInitState()
         {
             rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
@@ -442,9 +444,9 @@ namespace GDI.Services
             if (ON)
             {
                 int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
-                Thread.Sleep(60); // 保持100ms
+                Thread.Sleep(100); // 保持100ms
                 int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
-                Thread.Sleep(2800);
+                Thread.Sleep(2700);
             }
             else
             {

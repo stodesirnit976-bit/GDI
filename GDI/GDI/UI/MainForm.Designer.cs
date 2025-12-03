@@ -34,8 +34,12 @@
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.rbt_OFF = new System.Windows.Forms.RadioButton();
             this.label9 = new System.Windows.Forms.Label();
+            this.rbt_ON = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxTemplate = new System.Windows.Forms.ComboBox();
             this.textBox_trans = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.textBox_height = new System.Windows.Forms.TextBox();
@@ -45,12 +49,8 @@
             this.textBox_width = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.textBox_length = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.rbt_ON = new System.Windows.Forms.RadioButton();
-            this.rbt_OFF = new System.Windows.Forms.RadioButton();
-            this.comboBoxTemplate = new System.Windows.Forms.ComboBox();
             this.textBox_volume = new System.Windows.Forms.TextBox();
             this.textBox_tareWeight = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -88,6 +88,7 @@
             // 
             // btn_Detail
             // 
+            this.btn_Detail.Font = new System.Drawing.Font("宋体", 20F);
             this.btn_Detail.Location = new System.Drawing.Point(28, 783);
             this.btn_Detail.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Detail.Name = "btn_Detail";
@@ -100,6 +101,7 @@
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.panel1);
+            this.groupBox4.Font = new System.Drawing.Font("宋体", 12F);
             this.groupBox4.Location = new System.Drawing.Point(670, 28);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
@@ -120,20 +122,21 @@
             // groupBox9
             // 
             this.groupBox9.Controls.Add(this.tabControl1);
+            this.groupBox9.Font = new System.Drawing.Font("宋体", 12F);
             this.groupBox9.Location = new System.Drawing.Point(340, 28);
             this.groupBox9.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox9.Size = new System.Drawing.Size(291, 671);
+            this.groupBox9.Size = new System.Drawing.Size(291, 679);
             this.groupBox9.TabIndex = 37;
             this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "图片生成";
+            this.groupBox9.Text = "喷印图片生成";
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(4, 19);
+            this.tabControl1.Location = new System.Drawing.Point(4, 27);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -142,8 +145,12 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Controls.Add(this.rbt_OFF);
             this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.rbt_ON);
             this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.comboBoxTemplate);
             this.tabPage1.Controls.Add(this.textBox_trans);
             this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Controls.Add(this.textBox_height);
@@ -153,53 +160,98 @@
             this.tabPage1.Controls.Add(this.textBox_width);
             this.tabPage1.Controls.Add(this.label8);
             this.tabPage1.Controls.Add(this.label16);
-            this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.textBox_length);
             this.tabPage1.Controls.Add(this.label10);
-            this.tabPage1.Controls.Add(this.comboBoxTemplate);
-            this.tabPage1.Controls.Add(this.rbt_ON);
             this.tabPage1.Controls.Add(this.textBox_volume);
             this.tabPage1.Controls.Add(this.textBox_tareWeight);
-            this.tabPage1.Controls.Add(this.rbt_OFF);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.textBox_payLoad);
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.label6);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 26);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(275, 622);
+            this.tabPage1.Size = new System.Drawing.Size(275, 618);
             this.tabPage1.TabIndex = 1;
             this.tabPage1.Text = "文字";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("宋体", 20F);
+            this.label2.Location = new System.Drawing.Point(14, 472);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(93, 27);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "模版：";
+            // 
+            // rbt_OFF
+            // 
+            this.rbt_OFF.AutoSize = true;
+            this.rbt_OFF.Font = new System.Drawing.Font("宋体", 15F);
+            this.rbt_OFF.Location = new System.Drawing.Point(124, 579);
+            this.rbt_OFF.Margin = new System.Windows.Forms.Padding(2);
+            this.rbt_OFF.Name = "rbt_OFF";
+            this.rbt_OFF.Size = new System.Drawing.Size(67, 24);
+            this.rbt_OFF.TabIndex = 8;
+            this.rbt_OFF.TabStop = true;
+            this.rbt_OFF.Text = "竖版";
+            this.rbt_OFF.UseVisualStyleBackColor = true;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("宋体", 20F);
-            this.label9.Location = new System.Drawing.Point(94, 425);
+            this.label9.Location = new System.Drawing.Point(15, 258);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(80, 27);
             this.label9.TabIndex = 2;
             this.label9.Text = "模版2";
             // 
+            // rbt_ON
+            // 
+            this.rbt_ON.AutoSize = true;
+            this.rbt_ON.Checked = true;
+            this.rbt_ON.Font = new System.Drawing.Font("宋体", 15F);
+            this.rbt_ON.Location = new System.Drawing.Point(18, 579);
+            this.rbt_ON.Margin = new System.Windows.Forms.Padding(2);
+            this.rbt_ON.Name = "rbt_ON";
+            this.rbt_ON.Size = new System.Drawing.Size(67, 24);
+            this.rbt_ON.TabIndex = 8;
+            this.rbt_ON.TabStop = true;
+            this.rbt_ON.Text = "横版";
+            this.rbt_ON.UseVisualStyleBackColor = true;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 20F);
-            this.label1.Location = new System.Drawing.Point(94, 149);
+            this.label1.Location = new System.Drawing.Point(13, 22);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(80, 27);
             this.label1.TabIndex = 2;
             this.label1.Text = "模版1";
             // 
+            // comboBoxTemplate
+            // 
+            this.comboBoxTemplate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTemplate.Font = new System.Drawing.Font("宋体", 15F);
+            this.comboBoxTemplate.FormattingEnabled = true;
+            this.comboBoxTemplate.Location = new System.Drawing.Point(18, 513);
+            this.comboBoxTemplate.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBoxTemplate.Name = "comboBoxTemplate";
+            this.comboBoxTemplate.Size = new System.Drawing.Size(108, 28);
+            this.comboBoxTemplate.TabIndex = 4;
+            // 
             // textBox_trans
             // 
             this.textBox_trans.Font = new System.Drawing.Font("宋体", 16F);
-            this.textBox_trans.Location = new System.Drawing.Point(23, 575);
+            this.textBox_trans.Location = new System.Drawing.Point(18, 405);
             this.textBox_trans.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_trans.Name = "textBox_trans";
             this.textBox_trans.Size = new System.Drawing.Size(51, 32);
@@ -210,7 +262,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("宋体", 16F);
-            this.label14.Location = new System.Drawing.Point(19, 549);
+            this.label14.Location = new System.Drawing.Point(14, 379);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(76, 22);
@@ -220,7 +272,7 @@
             // textBox_height
             // 
             this.textBox_height.Font = new System.Drawing.Font("宋体", 16F);
-            this.textBox_height.Location = new System.Drawing.Point(182, 503);
+            this.textBox_height.Location = new System.Drawing.Point(177, 333);
             this.textBox_height.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_height.Name = "textBox_height";
             this.textBox_height.Size = new System.Drawing.Size(61, 32);
@@ -232,7 +284,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("宋体", 16F);
-            this.label4.Location = new System.Drawing.Point(33, 203);
+            this.label4.Location = new System.Drawing.Point(19, 74);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 22);
@@ -243,7 +295,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("宋体", 16F);
-            this.label11.Location = new System.Drawing.Point(189, 476);
+            this.label11.Location = new System.Drawing.Point(184, 306);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(54, 22);
@@ -254,7 +306,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("宋体", 16F);
-            this.label5.Location = new System.Drawing.Point(32, 262);
+            this.label5.Location = new System.Drawing.Point(19, 122);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(76, 22);
@@ -264,7 +316,7 @@
             // textBox_width
             // 
             this.textBox_width.Font = new System.Drawing.Font("宋体", 16F);
-            this.textBox_width.Location = new System.Drawing.Point(102, 503);
+            this.textBox_width.Location = new System.Drawing.Point(97, 333);
             this.textBox_width.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_width.Name = "textBox_width";
             this.textBox_width.Size = new System.Drawing.Size(60, 32);
@@ -275,7 +327,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("宋体", 16F);
-            this.label8.Location = new System.Drawing.Point(33, 317);
+            this.label8.Location = new System.Drawing.Point(19, 173);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(76, 22);
@@ -286,28 +338,17 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("宋体", 16F);
-            this.label16.Location = new System.Drawing.Point(108, 477);
+            this.label16.Location = new System.Drawing.Point(103, 307);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(54, 22);
             this.label16.TabIndex = 26;
             this.label16.Text = "宽：";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("宋体", 16F);
-            this.label2.Location = new System.Drawing.Point(98, 17);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 22);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "模版：";
-            // 
             // textBox_length
             // 
             this.textBox_length.Font = new System.Drawing.Font("宋体", 16F);
-            this.textBox_length.Location = new System.Drawing.Point(24, 503);
+            this.textBox_length.Location = new System.Drawing.Point(19, 333);
             this.textBox_length.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_length.Name = "textBox_length";
             this.textBox_length.Size = new System.Drawing.Size(63, 32);
@@ -319,56 +360,20 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("宋体", 16F);
-            this.label10.Location = new System.Drawing.Point(24, 477);
+            this.label10.Location = new System.Drawing.Point(19, 307);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(54, 22);
             this.label10.TabIndex = 23;
             this.label10.Text = "长：";
             // 
-            // rbt_ON
-            // 
-            this.rbt_ON.AutoSize = true;
-            this.rbt_ON.Checked = true;
-            this.rbt_ON.Location = new System.Drawing.Point(77, 107);
-            this.rbt_ON.Margin = new System.Windows.Forms.Padding(2);
-            this.rbt_ON.Name = "rbt_ON";
-            this.rbt_ON.Size = new System.Drawing.Size(47, 16);
-            this.rbt_ON.TabIndex = 8;
-            this.rbt_ON.TabStop = true;
-            this.rbt_ON.Text = "横版";
-            this.rbt_ON.UseVisualStyleBackColor = true;
-            // 
-            // rbt_OFF
-            // 
-            this.rbt_OFF.AutoSize = true;
-            this.rbt_OFF.Location = new System.Drawing.Point(147, 107);
-            this.rbt_OFF.Margin = new System.Windows.Forms.Padding(2);
-            this.rbt_OFF.Name = "rbt_OFF";
-            this.rbt_OFF.Size = new System.Drawing.Size(47, 16);
-            this.rbt_OFF.TabIndex = 8;
-            this.rbt_OFF.TabStop = true;
-            this.rbt_OFF.Text = "竖版";
-            this.rbt_OFF.UseVisualStyleBackColor = true;
-            // 
-            // comboBoxTemplate
-            // 
-            this.comboBoxTemplate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTemplate.Font = new System.Drawing.Font("宋体", 15F);
-            this.comboBoxTemplate.FormattingEnabled = true;
-            this.comboBoxTemplate.Location = new System.Drawing.Point(77, 54);
-            this.comboBoxTemplate.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBoxTemplate.Name = "comboBoxTemplate";
-            this.comboBoxTemplate.Size = new System.Drawing.Size(108, 28);
-            this.comboBoxTemplate.TabIndex = 4;
-            // 
             // textBox_volume
             // 
             this.textBox_volume.Font = new System.Drawing.Font("宋体", 16F);
-            this.textBox_volume.Location = new System.Drawing.Point(154, 312);
+            this.textBox_volume.Location = new System.Drawing.Point(140, 168);
             this.textBox_volume.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_volume.Name = "textBox_volume";
-            this.textBox_volume.Size = new System.Drawing.Size(58, 32);
+            this.textBox_volume.Size = new System.Drawing.Size(59, 32);
             this.textBox_volume.TabIndex = 11;
             this.textBox_volume.Text = "120";
             this.textBox_volume.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -376,7 +381,7 @@
             // textBox_tareWeight
             // 
             this.textBox_tareWeight.Font = new System.Drawing.Font("宋体", 16F);
-            this.textBox_tareWeight.Location = new System.Drawing.Point(154, 259);
+            this.textBox_tareWeight.Location = new System.Drawing.Point(141, 119);
             this.textBox_tareWeight.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_tareWeight.Name = "textBox_tareWeight";
             this.textBox_tareWeight.Size = new System.Drawing.Size(58, 32);
@@ -388,7 +393,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("宋体", 16F);
-            this.label7.Location = new System.Drawing.Point(222, 315);
+            this.label7.Location = new System.Drawing.Point(208, 171);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(32, 22);
@@ -398,10 +403,10 @@
             // textBox_payLoad
             // 
             this.textBox_payLoad.Font = new System.Drawing.Font("宋体", 16F);
-            this.textBox_payLoad.Location = new System.Drawing.Point(154, 200);
+            this.textBox_payLoad.Location = new System.Drawing.Point(140, 71);
             this.textBox_payLoad.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_payLoad.Name = "textBox_payLoad";
-            this.textBox_payLoad.Size = new System.Drawing.Size(58, 32);
+            this.textBox_payLoad.Size = new System.Drawing.Size(59, 32);
             this.textBox_payLoad.TabIndex = 9;
             this.textBox_payLoad.Text = "60";
             this.textBox_payLoad.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -410,7 +415,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("宋体", 16F);
-            this.label3.Location = new System.Drawing.Point(222, 203);
+            this.label3.Location = new System.Drawing.Point(208, 74);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(21, 22);
@@ -421,7 +426,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("宋体", 16F);
-            this.label6.Location = new System.Drawing.Point(222, 262);
+            this.label6.Location = new System.Drawing.Point(209, 122);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(21, 22);
@@ -434,11 +439,11 @@
             this.tabPage2.Controls.Add(this.radioButton_v1);
             this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.comboBox_filePicture);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 26);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage2.Size = new System.Drawing.Size(275, 622);
+            this.tabPage2.Size = new System.Drawing.Size(275, 618);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "图标";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -447,10 +452,11 @@
             // 
             this.radioButton_h1.AutoSize = true;
             this.radioButton_h1.Checked = true;
-            this.radioButton_h1.Location = new System.Drawing.Point(87, 188);
+            this.radioButton_h1.Font = new System.Drawing.Font("宋体", 15F);
+            this.radioButton_h1.Location = new System.Drawing.Point(47, 184);
             this.radioButton_h1.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton_h1.Name = "radioButton_h1";
-            this.radioButton_h1.Size = new System.Drawing.Size(47, 16);
+            this.radioButton_h1.Size = new System.Drawing.Size(67, 24);
             this.radioButton_h1.TabIndex = 9;
             this.radioButton_h1.TabStop = true;
             this.radioButton_h1.Text = "横版";
@@ -459,10 +465,11 @@
             // radioButton_v1
             // 
             this.radioButton_v1.AutoSize = true;
-            this.radioButton_v1.Location = new System.Drawing.Point(147, 188);
+            this.radioButton_v1.Font = new System.Drawing.Font("宋体", 15F);
+            this.radioButton_v1.Location = new System.Drawing.Point(162, 184);
             this.radioButton_v1.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton_v1.Name = "radioButton_v1";
-            this.radioButton_v1.Size = new System.Drawing.Size(47, 16);
+            this.radioButton_v1.Size = new System.Drawing.Size(67, 24);
             this.radioButton_v1.TabIndex = 10;
             this.radioButton_v1.TabStop = true;
             this.radioButton_v1.Text = "竖版";
@@ -493,6 +500,7 @@
             // 
             // btn_Generate
             // 
+            this.btn_Generate.Font = new System.Drawing.Font("宋体", 20F);
             this.btn_Generate.Location = new System.Drawing.Point(28, 257);
             this.btn_Generate.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Generate.Name = "btn_Generate";
@@ -505,6 +513,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.pictureBox_Preview);
+            this.groupBox1.Font = new System.Drawing.Font("宋体", 12F);
             this.groupBox1.Location = new System.Drawing.Point(670, 626);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
@@ -525,6 +534,7 @@
             // 
             // btn_EStop
             // 
+            this.btn_EStop.Font = new System.Drawing.Font("宋体", 20F);
             this.btn_EStop.Location = new System.Drawing.Point(28, 557);
             this.btn_EStop.Margin = new System.Windows.Forms.Padding(2);
             this.btn_EStop.Name = "btn_EStop";
@@ -536,6 +546,7 @@
             // 
             // btn_Wrok
             // 
+            this.btn_Wrok.Font = new System.Drawing.Font("宋体", 20F);
             this.btn_Wrok.Location = new System.Drawing.Point(28, 364);
             this.btn_Wrok.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Wrok.Name = "btn_Wrok";
@@ -547,6 +558,7 @@
             // 
             // btn_SysInit
             // 
+            this.btn_SysInit.Font = new System.Drawing.Font("宋体", 20F);
             this.btn_SysInit.Location = new System.Drawing.Point(28, 143);
             this.btn_SysInit.Margin = new System.Windows.Forms.Padding(2);
             this.btn_SysInit.Name = "btn_SysInit";
@@ -558,31 +570,33 @@
             // 
             // tbx_UVheight
             // 
-            this.tbx_UVheight.Location = new System.Drawing.Point(8, 50);
+            this.tbx_UVheight.Font = new System.Drawing.Font("宋体", 20F);
+            this.tbx_UVheight.Location = new System.Drawing.Point(9, 63);
             this.tbx_UVheight.Name = "tbx_UVheight";
-            this.tbx_UVheight.Size = new System.Drawing.Size(53, 21);
+            this.tbx_UVheight.Size = new System.Drawing.Size(53, 38);
             this.tbx_UVheight.TabIndex = 37;
-            this.tbx_UVheight.Text = "10";
+            this.tbx_UVheight.Text = "20";
+            this.tbx_UVheight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("宋体", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label13.Font = new System.Drawing.Font("宋体", 20F);
             this.label13.Location = new System.Drawing.Point(4, 22);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(142, 19);
+            this.label13.Size = new System.Drawing.Size(201, 27);
             this.label13.TabIndex = 35;
             this.label13.Text = "机械臂工作距离";
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("宋体", 11F);
-            this.label18.Location = new System.Drawing.Point(66, 56);
+            this.label18.Font = new System.Drawing.Font("宋体", 20F);
+            this.label18.Location = new System.Drawing.Point(67, 74);
             this.label18.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(23, 15);
+            this.label18.Size = new System.Drawing.Size(40, 27);
             this.label18.TabIndex = 36;
             this.label18.Text = "mm";
             // 
@@ -591,11 +605,11 @@
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.tbx_UVheight);
             this.groupBox2.Controls.Add(this.label18);
-            this.groupBox2.Location = new System.Drawing.Point(346, 768);
+            this.groupBox2.Location = new System.Drawing.Point(344, 774);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox2.Size = new System.Drawing.Size(291, 94);
+            this.groupBox2.Size = new System.Drawing.Size(291, 106);
             this.groupBox2.TabIndex = 39;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "机械臂设置";
@@ -609,15 +623,15 @@
             this.button3.TabIndex = 0;
             this.button3.Text = "io高电平";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.btn_test_Click);
             // 
             // rbt_PfintOFF
             // 
             this.rbt_PfintOFF.AutoSize = true;
-            this.rbt_PfintOFF.Location = new System.Drawing.Point(447, 726);
+            this.rbt_PfintOFF.Font = new System.Drawing.Font("宋体", 15F);
+            this.rbt_PfintOFF.Location = new System.Drawing.Point(491, 728);
             this.rbt_PfintOFF.Margin = new System.Windows.Forms.Padding(2);
             this.rbt_PfintOFF.Name = "rbt_PfintOFF";
-            this.rbt_PfintOFF.Size = new System.Drawing.Size(95, 16);
+            this.rbt_PfintOFF.Size = new System.Drawing.Size(147, 24);
             this.rbt_PfintOFF.TabIndex = 8;
             this.rbt_PfintOFF.TabStop = true;
             this.rbt_PfintOFF.Text = "关闭喷印触发";
@@ -627,10 +641,11 @@
             // 
             this.rbt_PrintON.AutoSize = true;
             this.rbt_PrintON.Checked = true;
-            this.rbt_PrintON.Location = new System.Drawing.Point(348, 726);
+            this.rbt_PrintON.Font = new System.Drawing.Font("宋体", 15F);
+            this.rbt_PrintON.Location = new System.Drawing.Point(340, 728);
             this.rbt_PrintON.Margin = new System.Windows.Forms.Padding(2);
             this.rbt_PrintON.Name = "rbt_PrintON";
-            this.rbt_PrintON.Size = new System.Drawing.Size(95, 16);
+            this.rbt_PrintON.Size = new System.Drawing.Size(147, 24);
             this.rbt_PrintON.TabIndex = 8;
             this.rbt_PrintON.TabStop = true;
             this.rbt_PrintON.Text = "开启喷印触发";
@@ -638,12 +653,13 @@
             // 
             // btn_RESEAT
             // 
+            this.btn_RESEAT.Font = new System.Drawing.Font("宋体", 20F);
             this.btn_RESEAT.Location = new System.Drawing.Point(28, 669);
             this.btn_RESEAT.Margin = new System.Windows.Forms.Padding(2);
             this.btn_RESEAT.Name = "btn_RESEAT";
             this.btn_RESEAT.Size = new System.Drawing.Size(261, 83);
             this.btn_RESEAT.TabIndex = 0;
-            this.btn_RESEAT.Text = "重启";
+            this.btn_RESEAT.Text = "重新标定工作平面";
             this.btn_RESEAT.UseVisualStyleBackColor = true;
             this.btn_RESEAT.Click += new System.EventHandler(this.btn_RESEAT_Click);
             // 
