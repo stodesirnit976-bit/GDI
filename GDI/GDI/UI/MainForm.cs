@@ -370,7 +370,7 @@ namespace GDI
 
         private Bitmap imagecolor;
         private Bitmap imagedepth;
-        private float alpha = 0.25f;
+        private float alpha = 0.15f;
 
         // -------- 相机启动 --------
         private async Task cam_Start()

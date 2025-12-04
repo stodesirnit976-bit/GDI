@@ -14,7 +14,9 @@ namespace GDI.Models
         public static float c2PositionX {get; set;}
         public static float c2PositionY { get; set; }
 
+        public static int time { get; set; }
 
+        public static int speed { get; set; }
 
     }
 }

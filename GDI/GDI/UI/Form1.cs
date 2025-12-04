@@ -413,13 +413,14 @@ namespace GDI
         // ===================================================================================================
 
 
-        // 纯传后台线程参数
+        // 更新配置参数
         public void Arg_Update()
         {
             Arg.c2PositionX = float.Parse(tbx_c2PositionX.Text) / 1000;
             Arg.c2PositionY = float.Parse(tbx_c2PositionY.Text) / 1000;
             Arg.laserDistance = int.Parse(tbx_laser.Text);
-           
+            Arg.time = int.Parse(tbx_time.Text);
+            Arg.speed = int.Parse(tbx_Speed.Text);
         }
 
         private void btn_UpdateArgs_Click(object sender, EventArgs e)

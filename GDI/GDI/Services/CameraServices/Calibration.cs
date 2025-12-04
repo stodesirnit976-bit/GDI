@@ -40,7 +40,7 @@ namespace GDI.Services.CameraServices
         private void imgProcessor(Bitmap ColorBitmap, Bitmap DepthColorBitmap, DepthFrame depthFrame, Intrinsics intrinsics)
         {
             // 1. 等待时间
-            if ((DateTime.Now - startTime).TotalSeconds < 7) return;
+            if ((DateTime.Now - startTime).TotalSeconds <6) return;
 
             Console.WriteLine(">>> [1/2] 相机启动稳定，开始第一次标定...");
 
@@ -80,18 +80,18 @@ namespace GDI.Services.CameraServices
 
             // 4. 应用偏移量 (恢复你原始的逻辑)
             // 注意：这里用的是你最开始代码里的偏移量，确保这组参数是你想要的
-            state.pose.position.x = q.x + 0.5f;
-            state.pose.position.y = q.y + 0.2f;
-            state.pose.position.z = q.z - 0.1f;
+            //state.pose.position.x = q.x;
+            //state.pose.position.y = q.y;
+            //state.pose.position.z = q.z ;
 
-            Console.WriteLine($"[移动指令] 正在前往观测点: X={state.pose.position.x:F3}, Y={state.pose.position.y:F3}, Z={state.pose.position.z:F3}");
+            //Console.WriteLine($"[移动指令] 正在前往观测点: X={state.pose.position.x:F3}, Y={state.pose.position.y:F3}, Z={state.pose.position.z:F3}");
 
-            int ret = rm_movel(Arm.Instance.robotHandlePtr, state.pose, 15, 0, 0, 1);
-            if (ret != 0)
-            {
-                Console.WriteLine($"[错误] 移动失败，错误码: {ret}");
-                return;
-            }
+            //int ret = rm_movel(Arm.Instance.robotHandlePtr, state.pose, 15, 0, 0, 1);
+            //if (ret != 0)
+            //{
+            //    Console.WriteLine($"[错误] 移动失败，错误码: {ret}");
+            //    return;
+            //}
 
             // 5. 标定完成，取消订阅，准备进入第二阶段
             cam.cam_Event -= imgProcessor;
@@ -100,7 +100,7 @@ namespace GDI.Services.CameraServices
             Console.WriteLine(">>> 第一次移动完成，等待停稳...");
             Task.Run(async () =>
             {
-                await Task.Delay(4000); // 给机械臂停稳后 4秒 的震动消除时间
+                //await Task.Delay(4000); // 给机械臂停稳后 4秒 的震动消除时间
                 Calibration2_subCamEvent(this.cam);
             });
         }
@@ -120,7 +120,7 @@ namespace GDI.Services.CameraServices
         //wm修改
         private void imgProcessor2(Bitmap ColorBitmap, Bitmap DepthColorBitmap, DepthFrame depthFrame, Intrinsics intrinsics)
         {
-            if ((DateTime.Now - startTime).TotalSeconds < 1) return;
+            if ((DateTime.Now - startTime).TotalSeconds < 0.5) return;
             startTime = DateTime.Now;
             // 处理帧数据进行标定
             //Task.Delay(500);
@@ -132,7 +132,7 @@ namespace GDI.Services.CameraServices
             if (is_success)
             {
                 rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
-                rm_movej(Arm.Instance.robotHandlePtr, c_ini, 10, 0, 0, 0);
+                rm_movej(Arm.Instance.robotHandlePtr, c_ini, 8, 0, 0, 0);
                 rm_change_work_frame(Arm.Instance.robotHandlePtr, "work1");
                 cam.cam_Event -= imgProcessor2;
                 MessageBox.Show("标定完成！可以执行");
@@ -155,8 +155,7 @@ namespace GDI.Services.CameraServices
         // ===================================================================================================
 
         // ==============================================================
-        // 【终极几何版】ProcessBitmapPixels
-        // 特性：HSV/RGB混合抗光 + 几何形状匹配(等腰直角三角形)
+        // 主处理函数：处理 Bitmap 像素，找红点并匹配三角形
         // ==============================================================
         private int[] ProcessBitmapPixels(Bitmap bitmap)
         {
@@ -305,21 +304,21 @@ namespace GDI.Services.CameraServices
             bool[,] visited = new bool[w, h];
 
             // 留出边界
-            for (int y = 0; y < h - 3; y++)
+            for (int y = 0; y < h - 2; y++)
             {
-                for (int x = 0; x < w - 3; x++)
+                for (int x = 0; x < w - 2; x++)
                 {
                     if (visited[x, y]) continue;
 
-                    // 快速检查 4x4 块
+                    // 快速检查 2x2 块
                     bool isRedBlock = true;
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < 2; i++)
                     {
-                        for (int j = 0; j < 3; j++)
+                        for (int j = 0; j < 2; j++)
                         {
                             Color c = bitmap.GetPixel(x + i, y + j);
                             // 这里的阈值沿用之前优化过的抗反光参数
-                            if (c.R > 80 && c.R > c.B + 30 && c.R > c.G + 30 && c.G < 180 && c.B < 180) { }
+                            if (c.R > 90 && c.R > c.B + 30 && c.R > c.G + 30 && c.G < 160 && c.B < 160) { }
                             else { isRedBlock = false; break; }
                         }
                         if (!isRedBlock) break;
@@ -333,7 +332,7 @@ namespace GDI.Services.CameraServices
                         // 我们直接把这个 4x4 块记为一个"微定标点"，后续聚类
 
                         // 标记已访问
-                        for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) visited[x + i, y + j] = true;
+                        for (int i = 0; i < 2; i++) for (int j = 0; j < 2; j++) visited[x + i, y + j] = true;
 
                         // 尝试归并到现有的 blobs
                         Point center = new Point(x + 2, y + 2);
@@ -342,7 +341,7 @@ namespace GDI.Services.CameraServices
                         {
                             // 如果离某个已有定标点的任意一点很近 (<30px)，就并进去
                             // 简化：只比对定标点里的第一个点（假设定标点不大）
-                            if (GetDistSq(center, blob[0]) < 900) // 30*30
+                            if (GetDistSq(center, blob[0]) < 400) // 30*30
                             {
                                 blob.Add(center);
                                 merged = true;
@@ -359,7 +358,7 @@ namespace GDI.Services.CameraServices
                 }
             }
 
-            // 过滤掉太小的孤立定标点 (比如只有 1-2 个 4x4 块组成的)
+            // 过滤掉太小的孤立定标点 (比如只有 1-2 个 2x2 块组成的)
             return blobs.Where(b => b.Count >= 2).ToList();
         }
 
@@ -411,10 +410,13 @@ namespace GDI.Services.CameraServices
                         g.DrawString("O", new Font("Arial", 16, FontStyle.Regular), Brushes.Blue, O.X, O.Y - 35);
                         g.DrawEllipse(new Pen(Color.Blue, 3), O.X - s / 2, O.Y - s / 2, s, s);
 
-                        string filename = $@"D:\Debug\debug_{DateTime.Now:HH-mm-ss-fff}.png";
+                        string filename = $@"D:\Debug\debug_{DateTime.Now:yyyy-MM-dd_HH-mm-ss-fff}.png";
                         Directory.CreateDirectory(Path.GetDirectoryName(filename)); // 无则创建，有则忽略
                         debugBmp.Save(filename, ImageFormat.Png);
                         Console.WriteLine($"[调试图] {filename}");
+                        Console.WriteLine($"q点坐标{Q.X}{Q.Y}");
+                        Console.WriteLine($"p点坐标{P.X}{P.Y}");
+                        Console.WriteLine($"o点坐标{O.X}{O.Y}");
                     }
 
                     
@@ -457,6 +459,7 @@ namespace GDI.Services.CameraServices
         }
 
 
+
         // 【修改后的 Init】
         public rm_position_t Init(Bitmap Cimg, DepthFrame Dimg, Intrinsics Intt)
         {
@@ -483,22 +486,22 @@ namespace GDI.Services.CameraServices
             // 这里强制让坐标向红点“中心”回退 3 个像素，确保取到实心的红色区域。
 
             // Q(左上) -> 往右下退 3px
-            int sx_q = res[0] ;
+            int sx_q = res[0] - 1;
             int sy_q = res[1] ;
 
             // P(最下) -> 往上退 3px (X不变或微调)
-            int sx_p = res[2];
+            int sx_p = res[2] - 1;
             int sy_p = res[3] ;
 
             // O(最右) -> 往左退 3px
-            int sx_o = res[4] ;
+            int sx_o = res[4] - 1;
             int sy_o = res[5];
 
-            // 边界安全检查
-            sx_q = Math.Max(0, Math.Min(Cimg.Width - 1, sx_q));
-            sy_q = Math.Max(0, Math.Min(Cimg.Height - 1, sy_q));
-            sy_p = Math.Max(0, Math.Min(Cimg.Height - 1, sy_p));
-            sx_o = Math.Max(0, Math.Min(Cimg.Width - 1, sx_o));
+            //// 边界安全检查
+            //sx_q = Math.Max(0, Math.Min(Cimg.Width - 1, sx_q));
+            //sy_q = Math.Max(0, Math.Min(Cimg.Height - 1, sy_q));
+            //sy_p = Math.Max(0, Math.Min(Cimg.Height - 1, sy_p));
+            //sx_o = Math.Max(0, Math.Min(Cimg.Width - 1, sx_o));
 
             // 3. 使用“小区域平均”获取深度
             // 以前是直接 Dimg.GetDistance(res[0], res[1])，那是造成不稳定的元凶
@@ -518,20 +521,24 @@ namespace GDI.Services.CameraServices
             }
 
             q_tool.z = z_q;
-            q_tool.x = (sx_q - Intt.ppx) * q_tool.z / Intt.fx;
-            q_tool.y = (sy_q - Intt.ppy) * q_tool.z / Intt.fy;
+            q_tool.x = ((sx_q - Intt.ppx) * q_tool.z / Intt.fx) /*- 0.01f*/;
+            q_tool.y = ((sy_q - Intt.ppy) * q_tool.z / Intt.fy)/* + 0.002f*/;
 
             p_tool.z = z_p;
-            p_tool.x = (sx_p - Intt.ppx) * p_tool.z / Intt.fx;
+            p_tool.x = ((sx_p - Intt.ppx) * p_tool.z / Intt.fx)/* - 0.01f*/;
             p_tool.y = (sy_p - Intt.ppy) * p_tool.z / Intt.fy;
 
             o_tool.z = z_o;
-            o_tool.x = (sx_o - Intt.ppx) * o_tool.z / Intt.fx;
+            o_tool.x = ((sx_o - Intt.ppx) * o_tool.z / Intt.fx) /*- 0.01f*/;
             o_tool.y = (sy_o - Intt.ppy) * o_tool.z / Intt.fy;
+
+
 
             // 5. 转换到 Base 坐标系
             rm_change_work_frame(Arm.Instance.robotHandlePtr, "Base");
             rm_get_current_arm_state(Arm.Instance.robotHandlePtr, ref state);
+
+            //state.pose.euler.rz += (float)(Math.PI /2);
 
             rm_position_t q_base = CoordinateTransformer.TransformPoint(q_tool, state.pose);
             rm_position_t p_base = CoordinateTransformer.TransformPoint(p_tool, state.pose);
@@ -550,9 +557,13 @@ namespace GDI.Services.CameraServices
             Console.WriteLine($"QO边长: {qo:F4} m");
             Console.WriteLine($"边长差: {Math.Abs(qp - qo):F4} m (阈值 0.015)");
             Console.WriteLine($"深度值: Q={z_q:F3}, P={z_p:F3}, O={z_o:F3}");
-            Console.WriteLine($"q_tool.z:{q_tool.z},q_tool.x{q_tool.x},q_tool.y{q_tool.y}");
-            Console.WriteLine($"p_tool.z:{p_tool.z},p_tool.x{p_tool.x},p_tool.y{p_tool.y}");
-            Console.WriteLine($"o_tool.z:{o_tool.z},o_tool.x{o_tool.x},o_tool.y{o_tool.y}");
+            Console.WriteLine($"q_tool.x:{q_tool.x},q_tool.y{q_tool.y},q_tool.z{q_tool.z}");
+            Console.WriteLine($"p_tool.x:{p_tool.x},p_tool.y{p_tool.y},p_tool.z{p_tool.z}");
+            Console.WriteLine($"o_tool.x:{o_tool.x},o_tool.y{o_tool.y},o_tool.z{o_tool.z}");
+            Console.WriteLine($"qbase: {q_base.x} {q_base.y} {q_base.z}");
+            Console.WriteLine($"pbase: {p_base.x} {p_base.y} {p_base.z}");
+            Console.WriteLine($"obase: {o_base.x} {o_base.y} {o_base.z}");
+            Console.WriteLine($"深度值: Q={z_q:F3}, P={z_p:F3}, O={z_o:F3}");
 
             if (isIsosceles && isLengthValid)
             {

@@ -48,7 +48,7 @@ namespace GDI.Models
 
             float height = float.Parse(heightText);
             int count = Directory.EnumerateFiles(sliceSavePath, "*.bmp").Count();
-            int vol = 30;
+            int vol = Arg.speed;
 
             return new ArmParams
             {

@@ -446,7 +446,7 @@ namespace GDI.Services
                 int a = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 1);// 设置1号端口输出高电平
                 Thread.Sleep(100); // 保持100ms
                 int b = Arm.rm_set_DO_state(Arm.Instance.robotHandlePtr, 1, 0);// 设置1号端口输出低电平
-                Thread.Sleep(2700);
+                Thread.Sleep(Arg.time);
             }
             else
             {
